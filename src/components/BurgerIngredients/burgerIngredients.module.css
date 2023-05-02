@@ -1,0 +1,23 @@
+.section {
+	width: 600px;
+}
+.item {
+	width: 272px;
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	align-items: center;
+	position: relative;
+}
+
+.price {
+	display: flex;
+	align-items: center;
+	gap: 9px;
+}
+
+.wrapperItem {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 24px;
+}
