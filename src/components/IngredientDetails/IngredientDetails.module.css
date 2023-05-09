@@ -1,0 +1,29 @@
+
+
+.wrapper {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.wrapperIndicators {
+	margin-top: 32px;
+	width: 516px;
+	display: flex;
+	justify-content: space-between;
+	gap: 20px;
+	color: #8585AD;
+}
+
+.wrapperIndicator {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	align-items: center;
+}
+
+.img {
+	width: 520px;
+	height: 240px;
+	object-fit: contain;
+}

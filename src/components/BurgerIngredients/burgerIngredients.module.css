@@ -8,6 +8,11 @@
 	gap: 4px;
 	align-items: center;
 	position: relative;
+	cursor: pointer;
+}
+
+.item:hover {
+	opacity: 0.6;
 }
 
 .price {
@@ -20,4 +25,18 @@
 	display: grid;
 	grid-template-columns: repeat(2, 1fr);
 	gap: 24px;
+}
+
+.navigation {
+	display: flex;
+}
+
+.wrapper {
+	overflow: scroll;
+	height: 756px;
+	overflow-x: hidden;
+}
+
+.paragraph {
+	text-align: center;
 }

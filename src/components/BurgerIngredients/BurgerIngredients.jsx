@@ -1,84 +1,89 @@
 import style from './burgerIngredients.module.css';
 
-import {Component} from "react";
+import { useState } from "react";
 import { Tab, CurrencyIcon, Counter } from "@ya.praktikum/react-developer-burger-ui-components";
+import { ingredientPropType } from "../../utils/propTypes";
 import PropTypes from "prop-types";
-import { ingredientPropType } from "../../utils/prop-types";
+import Modal from "../Modal/Modal";
+import IngredientDetails from "../IngredientDetails/IngredientDetails";
 
+const BurgerIngredients = (props) => {
 
-export default class BurgerIngredients extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            current: 'one'
-        }
+    const [current, setCurrent] = useState('one');
+    const [modal, setModal] = useState(false);
+    const [cardModal, setCardModal] = useState({})
+
+    const openModal = (item) => {
+        setModal(modal => !modal)
+        setCardModal(item)
     }
 
-    setCurrent = (e) => {
-        this.setState(({current: e}))
+    const changeCurrent = (e) => {
+        setCurrent(() =>  e);
     }
 
-    createElement = (item) => {
+    const createElement = (item) => {
         return (
-            <div key={item._id} className={style.item}>
+            <div onClick={() => openModal(item)} key={item._id} className={style.item}>
                 <img src={item.image} alt={item.name}/>
                 <div className={style.price}>
                     <div className="text text_type_digits-default pt-1">{item.price}</div>
                     <CurrencyIcon type="primary" />
                 </div>
-                <p className="text text_type_main-default pt-1" style={{textAlign: "center"}}>{item.name}</p>
+                <p className={`${style.paragraph} text text_type_main-default pt-1`}>{item.name}</p>
                 <Counter count={1} size="default" extraClass="m-1" />
             </div>
         )
     }
 
-    render() {
-        const [...data] = this.props.data;
-        const bun = data.filter(item => item.type === 'bun');
-        const main = data.filter(item => item.type === 'main');
-        const sauce = data.filter(item => item.type === 'sauce');
+    const [...data] = props.data;
+    const bun = data.filter(item => item.type === 'bun');
+    const main = data.filter(item => item.type === 'main');
+    const sauce = data.filter(item => item.type === 'sauce');
 
-        return (
-            <section className={style.section}>
-                <div>
-                    <h1 className='text text_type_main-large pt-10'>Соберите бургер</h1>
-                    <nav className='pt-5' style={{ display: 'flex' }}>
-                        <Tab value="one" active={this.state.current === 'one'} onClick={this.setCurrent}>
-                            Булки
-                        </Tab>
-                        <Tab value="two" active={this.state.current === 'two'} onClick={this.setCurrent}>
-                            Соусы
-                        </Tab>
-                        <Tab value="three" active={this.state.current === 'three'} onClick={this.setCurrent}>
-                            Начинки
-                        </Tab>
-                    </nav>
-                </div>
-                <div style={{overflow: 'scroll', height: '756px', overflowX: 'hidden'}} className='custom-scroll'>
-                    <div className="pt-10" >
-                        <p className="text text_type_main-medium">Булки</p>
-                        <div className={`${style.wrapperItem} pt-6 pl-4`}>
-                            {bun.map(item => this.createElement(item))}
-                        </div>
-                    </div>
-                    <div className="pt-10" >
-                        <p className="text text_type_main-medium">Соусы</p>
-                        <div className={`${style.wrapperItem} pt-6 pl-4`}>
-                            {main.map(item => this.createElement(item))}
-                        </div>
-                    </div>
-                    <div className="pt-10" >
-                        <p className="text text_type_main-medium">Начинки</p>
-                        <div className={`${style.wrapperItem} pt-6 pl-4`}>
-                            {sauce.map(item => this.createElement(item))}
-                        </div>
+    return (
+        <section className={style.section}>
+            <div>
+                <h1 className='text text_type_main-large pt-10'>Соберите бургер</h1>
+                <nav className={`${style.navigation} pt-5`}>
+                    <Tab value="one" active={current === 'one'} onClick={changeCurrent}>
+                        Булки
+                    </Tab>
+                    <Tab value="two" active={current === 'two'} onClick={changeCurrent}>
+                        Соусы
+                    </Tab>
+                    <Tab value="three" active={current === 'three'} onClick={changeCurrent}>
+                        Начинки
+                    </Tab>
+                </nav>
+            </div>
+            <div className={`${style.wrapper} custom-scroll`}>
+                <div className="pt-10" >
+                    <p className="text text_type_main-medium">Булки</p>
+                    <div className={`${style.wrapperItem} pt-6 pl-4`}>
+                        {bun.map(item => createElement(item)) }
                     </div>
                 </div>
-            </section>
-        )
-    }
+                <div className="pt-10" >
+                    <p className="text text_type_main-medium">Соусы</p>
+                    <div className={`${style.wrapperItem} pt-6 pl-4`}>
+                        {main.map(item => createElement(item))}
+                    </div>
+                </div>
+                <div className="pt-10" >
+                    <p className="text text_type_main-medium">Начинки</p>
+                    <div className={`${style.wrapperItem} pt-6 pl-4`}>
+                        {sauce.map(item => createElement(item))}
+                    </div>
+                </div>
+            </div>
+            <Modal openModal={openModal} modal={modal}><IngredientDetails card={cardModal}/></Modal>
+        </section>
+    )
 }
 
 BurgerIngredients.propTypes = {
     data: PropTypes.arrayOf(ingredientPropType)
 }
+
+export default BurgerIngredients;

@@ -1,56 +1,81 @@
 import style from './burgerConstructor.module.css';
 
-import {Component} from "react";
-import { Button, CurrencyIcon, DeleteIcon, DragIcon } from "@ya.praktikum/react-developer-burger-ui-components";
-import { ingredientPropType } from "../../utils/prop-types";
+import {
+    Button, ConstructorElement,
+    CurrencyIcon,
+    DragIcon,
+} from "@ya.praktikum/react-developer-burger-ui-components";
+import { ingredientPropType } from "../../utils/propTypes";
 import PropTypes from "prop-types";
+import { useState } from "react";
+import Modal from "../Modal/Modal";
+import OrderDetails from "../OrderDetails/OrderDetails";
 
 
-export default class BurgerConstructor extends Component {
-    constructor(props) {
-        super(props);
+const BurgerConstructor = (props) => {
+
+    const [modal, setModal] = useState(false);
+
+    const openModal = () => {
+        setModal(modal => !modal)
     }
 
-    createElement = (item) => {
-        return (
-            <div key={item._id} className={style.wrapperItem}>
-                <div className={style.wrapperIcon}>
-                    {item.type === 'sauce' ? <DragIcon type="primary" /> : null}
+    const [...data] = props.data;
+    const bun = data.find(item => item.type === 'bun')
+    const ingredients = data.filter(item => item.type !== 'bun');
+
+    return (
+        <section className={style.section}>
+            <div className={`${style.wrapper}`}>
+                <div className="ml-8 mb-4">
+                    {
+                        bun && <ConstructorElement
+                            type="top"
+                            isLocked={true}
+                            text={bun.name}
+                            price={200}
+                            thumbnail={bun.image}/>
+                    }
                 </div>
-                <div className={style.wrapperElement}>
-                    <img className={style.img} src={item.image} alt={item.name}/>
-                    <p className={`${style.name} text text_type_main-default`}>{item.name}</p>
-                    <div className={style.price}>
-                        <div className="text text_type_digits-default pt-1">{item.price}</div>
-                        <CurrencyIcon type="primary" />
-                    </div>
-                    <DeleteIcon className='ml-5' type="primary" />
+
+                <div className={`${style.wrapperIngredients } custom-scroll`}>
+                    {
+                        ingredients.map(item =>  {
+                        return (
+                            <div className={`${style.item} mb-4`} key={item._id} >
+                                <DragIcon type="primary" />
+                                <ConstructorElement text={item.name} price={item.price} thumbnail={item.image}/>
+                            </div>
+                        )})
+                    }
+                </div>
+                <div className="ml-8 mt-4">
+                    {
+                        bun && <ConstructorElement
+                            type="bottom"
+                            isLocked={true}
+                            text={bun.name}
+                            price={200}
+                            thumbnail={bun.image}/>
+                    }
                 </div>
             </div>
-        )
-    }
-
-    render() {
-        const [...data] = this.props.data;
-        return (
-            <section className={style.section}>
-                <div style={{overflow: 'scroll', height: '756px', overflowX: 'hidden'}} className="custom-scroll">
-                    {data.map(item => this.createElement(item))}
+            <div className={`${style.fullPrice} mr-8`}>
+                <div className={style.wrapperFullPrice}>
+                    <p className="text text_type_digits-medium">610</p>
+                    <CurrencyIcon type="primary" />
                 </div>
-                <div className={style.fullPrice}>
-                    <div className={style.wrapperFullPrice}>
-                        <p className="text text_type_main-large">610</p>
-                        <CurrencyIcon type="primary" />
-                    </div>
-                    <Button htmlType="button" type="primary" size="large">
-                        Оформить заказ
-                    </Button>
-                </div>
-            </section>
-        )
-    }
+                <Button onClick={openModal} htmlType="button" type="primary" size="large">
+                    Оформить заказ
+                </Button>
+            </div>
+            <Modal openModal={openModal} modal={modal}><OrderDetails/></Modal>
+        </section>
+    )
 }
 
 BurgerConstructor.propTypes = {
     data: PropTypes.arrayOf(ingredientPropType)
 }
+
+export default BurgerConstructor;
