@@ -1,11 +1,11 @@
-import style from './burgerIngredients.module.css';
+import style from './burger-ingredients.module.css';
 
 import { useState } from "react";
 import { Tab, CurrencyIcon, Counter } from "@ya.praktikum/react-developer-burger-ui-components";
-import { ingredientPropType } from "../../utils/propTypes";
+import { ingredientPropType } from "../../utils/prop-types";
 import PropTypes from "prop-types";
-import Modal from "../Modal/Modal";
-import IngredientDetails from "../IngredientDetails/IngredientDetails";
+import Modal from "../modal/modal";
+import IngredientDetails from "../ingredient-details/ingredient-details";
 
 const BurgerIngredients = (props) => {
 
@@ -14,8 +14,8 @@ const BurgerIngredients = (props) => {
     const [cardModal, setCardModal] = useState({})
 
     const openModal = (item) => {
-        setModal(modal => !modal)
-        setCardModal(item)
+        setCardModal(item);
+        setModal(modal => !modal);
     }
 
     const changeCurrent = (e) => {
@@ -24,7 +24,7 @@ const BurgerIngredients = (props) => {
 
     const createElement = (item) => {
         return (
-            <div onClick={() => openModal(item)} key={item._id} className={style.item}>
+            <div onClick={() => openModal(item)}  key={item._id} className={style.item}>
                 <img src={item.image} alt={item.name}/>
                 <div className={style.price}>
                     <div className="text text_type_digits-default pt-1">{item.price}</div>
@@ -77,7 +77,7 @@ const BurgerIngredients = (props) => {
                     </div>
                 </div>
             </div>
-            <Modal openModal={openModal} modal={modal}><IngredientDetails card={cardModal}/></Modal>
+            {modal && <Modal openModal={openModal}><IngredientDetails card={cardModal}/></Modal>}
         </section>
     )
 }

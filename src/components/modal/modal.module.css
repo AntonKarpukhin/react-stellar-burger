@@ -4,7 +4,6 @@
 	height: 100%;
 	top: 0;
 	left: 0;
-	background: rgba(0, 0, 0, 0.6);
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -27,13 +26,13 @@
 
 .closeIcon {
 	position: absolute;
-	top: 60px;
+	top: 68px;
 	right: 40px;
 	cursor: pointer;
 	width: 24px;
 	height: 24px;
 	border: none;
-	background: url("/src/images/closeIcon.svg") no-repeat center;
+	background: rgba(28, 28, 33, 1);
 }
 
 .closeIcon:hover {

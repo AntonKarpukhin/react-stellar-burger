@@ -1,8 +1,7 @@
-import style from './IngredientDetails.module.css';
+import style from './ingredient-details.module.css';
 
 import { Fragment } from "react";
-import PropTypes from "prop-types";
-import { ingredientPropType } from "../../utils/propTypes";
+import { ingredientPropType } from "../../utils/prop-types";
 
 
 const IngredientDetails = ( { card }) => {

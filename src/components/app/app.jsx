@@ -1,7 +1,7 @@
 import style from "./app.module.css";
-import AppHeader from "../appHeader/AppHeader";
-import BurgerIngredients from "../BurgerIngredients/BurgerIngredients";
-import BurgerConstructor from "../BurgerConstructor/BurgerConstructor";
+import AppHeader from "../app-header/app-header";
+import BurgerIngredients from "../burger-ingredients/burger-ingredients";
+import BurgerConstructor from "../burger-constructor/burger-constructor";
 import { useEffect, useState } from "react";
 
 function App() {
@@ -10,7 +10,12 @@ function App() {
 
     useEffect(() => {
         fetch('https://norma.nomoreparties.space/api/ingredients')
-            .then(res => res.json())
+            .then(res => {
+                if (res.ok) {
+                    return res.json()
+                }
+                return Promise.reject(`Ошибка ${res.status}`);
+            })
             .then(res => setData(res.data))
             .catch(err => console.log(err))
     }, [])

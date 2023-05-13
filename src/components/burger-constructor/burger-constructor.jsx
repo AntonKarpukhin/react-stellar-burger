@@ -1,15 +1,15 @@
-import style from './burgerConstructor.module.css';
+import style from './burger-constructor.module.css';
 
 import {
     Button, ConstructorElement,
     CurrencyIcon,
     DragIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { ingredientPropType } from "../../utils/propTypes";
+import { ingredientPropType } from "../../utils/prop-types";
 import PropTypes from "prop-types";
 import { useState } from "react";
-import Modal from "../Modal/Modal";
-import OrderDetails from "../OrderDetails/OrderDetails";
+import Modal from "../modal/modal";
+import OrderDetails from "../order-details/order-details";
 
 
 const BurgerConstructor = (props) => {
@@ -32,7 +32,7 @@ const BurgerConstructor = (props) => {
                         bun && <ConstructorElement
                             type="top"
                             isLocked={true}
-                            text={bun.name}
+                            text={`${bun.name} (верх)`}
                             price={200}
                             thumbnail={bun.image}/>
                     }
@@ -54,7 +54,7 @@ const BurgerConstructor = (props) => {
                         bun && <ConstructorElement
                             type="bottom"
                             isLocked={true}
-                            text={bun.name}
+                            text={`${bun.name} (низ)`}
                             price={200}
                             thumbnail={bun.image}/>
                     }
@@ -69,7 +69,7 @@ const BurgerConstructor = (props) => {
                     Оформить заказ
                 </Button>
             </div>
-            <Modal openModal={openModal} modal={modal}><OrderDetails/></Modal>
+            {modal && <Modal openModal={openModal} modal={modal}><OrderDetails/></Modal>}
         </section>
     )
 }
