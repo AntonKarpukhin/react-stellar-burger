@@ -15,7 +15,11 @@ const BurgerIngredients = (props) => {
 
     const openModal = (item) => {
         setCardModal(item);
-        setModal(modal => !modal);
+        setModal(true);
+    }
+
+    const closeModal =() => {
+        setModal(false);
     }
 
     const changeCurrent = (e) => {
@@ -77,7 +81,7 @@ const BurgerIngredients = (props) => {
                     </div>
                 </div>
             </div>
-            {modal && <Modal openModal={openModal}><IngredientDetails card={cardModal}/></Modal>}
+            <Modal closeModal={closeModal} modal={modal}><IngredientDetails card={cardModal}/></Modal>
         </section>
     )
 }

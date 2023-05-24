@@ -3,7 +3,6 @@ import style from './modal.module.css'
 import ReactDOM from "react-dom";
 import { Fragment, useEffect } from "react";
 import PropTypes from "prop-types";
-import { useModal } from "../../hooks/use-modal";
 import ModalOverlay from "../modal-overlay/modal-overlay";
 import { CloseIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 
@@ -11,13 +10,13 @@ const modalRoot = document.getElementById("react-modals");
 
 const Modal = (props) => {
 
-    const { isModalOpen, openModal, closeModal } = useModal();
+    const { modal, closeModal } = props;
 
     useEffect(() => {
 
         const closeByEscape = (e) => {
-            if (e.key === 'Escape' && isModalOpen) {
-                props.openModal();
+            if (e.key === 'Escape' && modal) {
+                closeModal();
             }
         }
 
@@ -26,18 +25,19 @@ const Modal = (props) => {
         return () => {
             document.removeEventListener('keydown', closeByEscape);
         }
-    }, [isModalOpen])
+    }, [modal])
 
     const closeModals = (e) => {
         const target = e.currentTarget;
         if (target && (target.className.includes('popup') || target.className.includes('closeIcon'))) {
-            props.openModal();
+            closeModal();
         }
     }
+
     return ReactDOM.createPortal((
         <Fragment>
-            <ModalOverlay/>
-            <div onClick={(e) => closeModals(e)} className={isModalOpen ? `${style.popup} ${style.popupOpen}` : style.popup}>
+            <ModalOverlay modalActive={modal} />
+            <div onClick={closeModals} className={modal ? `${style.popup} ${style.popupOpen}` : style.popup}>
                 <div className={style.container}>
                     <div>
                         {props.children}

@@ -17,7 +17,11 @@ const BurgerConstructor = (props) => {
     const [modal, setModal] = useState(false);
 
     const openModal = () => {
-        setModal(modal => !modal)
+        setModal(true);
+    }
+
+    const closeModal =() => {
+        setModal(false);
     }
 
     const [...data] = props.data;
@@ -69,7 +73,7 @@ const BurgerConstructor = (props) => {
                     Оформить заказ
                 </Button>
             </div>
-            {modal && <Modal openModal={openModal} modal={modal}><OrderDetails/></Modal>}
+            <Modal closeModal={closeModal} modal={modal}><OrderDetails/></Modal>
         </section>
     )
 }

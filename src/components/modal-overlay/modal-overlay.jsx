@@ -1,8 +1,8 @@
 import style from './modal-overlay.module.css';
 
-const ModalOverlay = () => {
+const ModalOverlay = (props) => {
     return (
-        <div className={style.overlay}></div>
+        <div className={props.modalActive ? `${style.overlay} ${style.overlayOpen}` : style.overlay}></div>
     )
 }
 
