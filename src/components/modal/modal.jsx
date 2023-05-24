@@ -25,7 +25,7 @@ const Modal = (props) => {
         return () => {
             document.removeEventListener('keydown', closeByEscape);
         }
-    }, [modal])
+    }, [modal, closeModal])
 
     const closeModals = (e) => {
         const target = e.currentTarget;
