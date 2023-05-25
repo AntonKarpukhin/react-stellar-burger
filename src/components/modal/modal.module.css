@@ -1,17 +1,7 @@
 .popup {
-	position: fixed;
-	width: 100%;
-	height: 100%;
-	top: 0;
-	left: 0;
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	visibility: hidden;
-}
-
-.popupOpen {
-	visibility: visible;
 }
 
 .container {
@@ -39,3 +29,13 @@
 	opacity: 0.6;
 }
 
+.sectionWrapper {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}

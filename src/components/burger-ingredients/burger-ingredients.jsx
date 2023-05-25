@@ -18,7 +18,7 @@ const BurgerIngredients = (props) => {
         setModal(true);
     }
 
-    const closeModal =() => {
+    const closeModal = () => {
         setModal(false);
     }
 
@@ -81,7 +81,7 @@ const BurgerIngredients = (props) => {
                     </div>
                 </div>
             </div>
-            <Modal closeModal={closeModal} modal={modal}><IngredientDetails card={cardModal}/></Modal>
+            {modal && <Modal closeModal={closeModal}><IngredientDetails card={cardModal}/></Modal>}
         </section>
     )
 }

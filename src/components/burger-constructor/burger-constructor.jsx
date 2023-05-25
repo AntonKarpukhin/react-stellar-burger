@@ -73,7 +73,7 @@ const BurgerConstructor = (props) => {
                     Оформить заказ
                 </Button>
             </div>
-            <Modal closeModal={closeModal} modal={modal}><OrderDetails/></Modal>
+            {modal && <Modal closeModal={closeModal}><OrderDetails/></Modal>}
         </section>
     )
 }
