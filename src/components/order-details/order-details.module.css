@@ -1,0 +1,10 @@
+.wrapper {
+	margin: 120px 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.paragraph {
+	color: #8585AD;
+}

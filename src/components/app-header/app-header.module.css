@@ -1,0 +1,22 @@
+.header {
+	width: 1280px;
+	display: flex;
+	align-items: center;
+	padding: 16px 0;
+	justify-content: space-between;
+	margin: 0 auto;
+}
+
+.header__navigation {
+	display: flex;
+}
+
+.header__container {
+	composes: header__navigation;
+}
+
+.header__container:hover {
+	cursor: pointer;
+	opacity: 0.7;
+}
+

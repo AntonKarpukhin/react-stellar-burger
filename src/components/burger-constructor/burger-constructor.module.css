@@ -1,0 +1,35 @@
+.section {
+	padding-top: 100px;
+	width: 600px;
+	height: 912px;
+}
+
+.wrapper {
+	min-height: 656px;
+}
+
+.fullPrice {
+	margin-top: 40px;
+	display: flex;
+	align-items: center;
+	gap: 40px;
+	padding-left: 194px;
+	justify-content: flex-end;
+}
+
+.wrapperFullPrice {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.wrapperIngredients {
+	overflow: scroll;
+	overflow-x: hidden;
+	height: 464px;
+}
+
+.item {
+	composes: wrapperFullPrice;
+}
+
