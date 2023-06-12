@@ -1,21 +1,52 @@
 import style from './burger-ingredients.module.css';
 
-import { useState } from "react";
-import { Tab, CurrencyIcon, Counter } from "@ya.praktikum/react-developer-burger-ui-components";
+import { useContext, useEffect, useMemo, useReducer, useState } from "react";
+import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import { ingredientPropType } from "../../utils/prop-types";
 import PropTypes from "prop-types";
 import Modal from "../modal/modal";
 import IngredientDetails from "../ingredient-details/ingredient-details";
+import { BurgerContext } from "../../services/burger-constructor-context";
+import Ingredient from "../ingredient/ingredient";
 
-const BurgerIngredients = (props) => {
+function reducer(state, action) {
+    switch (action.type) {
+        case "add":
+            return { counter: state.counter + action.payload };
+        default:
+            throw new Error(`Wrong type of action: ${action.type}`);
+    }
+}
+
+const BurgerIngredients = () => {
 
     const [current, setCurrent] = useState('one');
     const [modal, setModal] = useState(false);
     const [cardModal, setCardModal] = useState({})
 
+    const [dataContext, setDataContext] = useContext(BurgerContext);
+    const [counter, dispatch] = useReducer(reducer, {counter: dataContext.count});
+
+    useEffect(() => {
+        setDataContext(prevState => {
+            return {...prevState, count: counter}
+        });
+    }, [dataContext.ingredients])
+
     const openModal = (item) => {
         setCardModal(item);
-        setModal(true);
+        // setModal(true);
+        dispatch({type: 'add', payload: +item.price})
+        setDataContext(prevState => {
+            const oldState = {...prevState, ingredients: [...prevState.ingredients, item]}
+            const newState = oldState.ingredients.reduce((acc, burg) => {
+                if (acc.includes(burg)) {
+                    return acc;
+                }
+                return [...acc, burg];
+            }, []);
+            return {...prevState, ingredients: newState}
+        })
     }
 
     const closeModal = () => {
@@ -26,21 +57,7 @@ const BurgerIngredients = (props) => {
         setCurrent(() =>  e);
     }
 
-    const createElement = (item) => {
-        return (
-            <div onClick={() => openModal(item)}  key={item._id} className={style.item}>
-                <img src={item.image} alt={item.name}/>
-                <div className={style.price}>
-                    <div className="text text_type_digits-default pt-1">{item.price}</div>
-                    <CurrencyIcon type="primary" />
-                </div>
-                <p className={`${style.paragraph} text text_type_main-default pt-1`}>{item.name}</p>
-                <Counter count={1} size="default" extraClass="m-1" />
-            </div>
-        )
-    }
-
-    const [...data] = props.data;
+    const [...data] = useMemo(() => dataContext.initial, [dataContext.initial])
     const bun = data.filter(item => item.type === 'bun');
     const main = data.filter(item => item.type === 'main');
     const sauce = data.filter(item => item.type === 'sauce');
@@ -65,19 +82,19 @@ const BurgerIngredients = (props) => {
                 <div className="pt-10" >
                     <p className="text text_type_main-medium">Булки</p>
                     <div className={`${style.wrapperItem} pt-6 pl-4`}>
-                        {bun.map(item => createElement(item)) }
+                        {bun.map(item => <Ingredient key={item._id} openModal={() => openModal(item)} item={item}/>) }
                     </div>
                 </div>
                 <div className="pt-10" >
                     <p className="text text_type_main-medium">Соусы</p>
                     <div className={`${style.wrapperItem} pt-6 pl-4`}>
-                        {main.map(item => createElement(item))}
+                        {main.map(item => <Ingredient key={item._id} openModal={() => openModal(item)} item={item}/>)}
                     </div>
                 </div>
                 <div className="pt-10" >
                     <p className="text text_type_main-medium">Начинки</p>
                     <div className={`${style.wrapperItem} pt-6 pl-4`}>
-                        {sauce.map(item => createElement(item))}
+                        {sauce.map(item => <Ingredient key={item._id} openModal={() => openModal(item)} item={item}/>)}
                     </div>
                 </div>
             </div>
@@ -86,8 +103,8 @@ const BurgerIngredients = (props) => {
     )
 }
 
-BurgerIngredients.propTypes = {
-    data: PropTypes.arrayOf(ingredientPropType)
-}
+// BurgerIngredients.propTypes = {
+//     data: PropTypes.arrayOf(ingredientPropType)
+// }
 
 export default BurgerIngredients;

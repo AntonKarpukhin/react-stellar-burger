@@ -2,10 +2,11 @@ import style from './order-details.module.css';
 
 import iconDone from '../../images/done.jpg'
 import { useState } from "react";
+import PropTypes from "prop-types";
 
-const OrderDetails = () => {
+const OrderDetails = (props) => {
 
-    const [current, setCurrent] = useState('034536')
+    const [current, setCurrent] = useState(props.price)
 
     return (
         <div className={style.wrapper}>
@@ -20,5 +21,8 @@ const OrderDetails = () => {
     )
 }
 
+OrderDetails.propTypes = {
+    price: PropTypes.number
+}
 
 export default OrderDetails;

@@ -7,26 +7,40 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { ingredientPropType } from "../../utils/prop-types";
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import Modal from "../modal/modal";
 import OrderDetails from "../order-details/order-details";
+import { BurgerContext } from "../../services/burger-constructor-context";
+import { checkResponse, postOrder } from "../../utils/burger-api";
 
 
-const BurgerConstructor = (props) => {
+const BurgerConstructor = () => {
 
     const [modal, setModal] = useState(false);
+    const [dataContext, setDataContext] = useContext(BurgerContext);
+    const [price, setPrice] = useState();
 
     const openModal = () => {
-        setModal(true);
+
+        const data = dataContext.ingredients.map(item => {
+            return item._id
+        })
+        postOrder(data)
+            .then(checkResponse)
+            .then(res => {
+                setPrice(res.order.number)
+                setModal(true);
+            })
+            .catch(err => console.log(err))
     }
 
     const closeModal =() => {
         setModal(false);
     }
 
-    const [...data] = props.data;
+    const [...data] = useMemo(() => dataContext.ingredients, [dataContext.ingredients]);
     const bun = data.find(item => item.type === 'bun')
-    const ingredients = data.filter(item => item.type !== 'bun');
+    const ingredients = data.filter(item => item.type !== 'bun')
 
     return (
         <section className={style.section}>
@@ -37,7 +51,7 @@ const BurgerConstructor = (props) => {
                             type="top"
                             isLocked={true}
                             text={`${bun.name} (верх)`}
-                            price={200}
+                            price={bun.price}
                             thumbnail={bun.image}/>
                     }
                 </div>
@@ -59,27 +73,27 @@ const BurgerConstructor = (props) => {
                             type="bottom"
                             isLocked={true}
                             text={`${bun.name} (низ)`}
-                            price={200}
+                            price={bun.price}
                             thumbnail={bun.image}/>
                     }
                 </div>
             </div>
             <div className={`${style.fullPrice} mr-8`}>
                 <div className={style.wrapperFullPrice}>
-                    <p className="text text_type_digits-medium">610</p>
+                    <p className="text text_type_digits-medium">{dataContext.count.counter ? dataContext.count.counter : 0}</p>
                     <CurrencyIcon type="primary" />
                 </div>
                 <Button onClick={openModal} htmlType="button" type="primary" size="large">
                     Оформить заказ
                 </Button>
             </div>
-            {modal && <Modal closeModal={closeModal}><OrderDetails/></Modal>}
+            {modal && <Modal closeModal={closeModal}><OrderDetails price={price}/></Modal>}
         </section>
     )
 }
 
-BurgerConstructor.propTypes = {
-    data: PropTypes.arrayOf(ingredientPropType)
-}
+// BurgerConstructor.propTypes = {
+//     data: PropTypes.arrayOf(ingredientPropType)
+// }
 
 export default BurgerConstructor;

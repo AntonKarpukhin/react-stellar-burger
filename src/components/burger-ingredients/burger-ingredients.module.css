@@ -1,25 +1,6 @@
 .section {
 	width: 600px;
 }
-.item {
-	width: 272px;
-	display: flex;
-	flex-direction: column;
-	gap: 4px;
-	align-items: center;
-	position: relative;
-	cursor: pointer;
-}
-
-.item:hover {
-	opacity: 0.6;
-}
-
-.price {
-	display: flex;
-	align-items: center;
-	gap: 9px;
-}
 
 .wrapperItem {
 	display: grid;
@@ -35,8 +16,4 @@
 	overflow: scroll;
 	height: 756px;
 	overflow-x: hidden;
-}
-
-.paragraph {
-	text-align: center;
 }
