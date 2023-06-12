@@ -7,10 +7,11 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { ingredientPropType } from "../../utils/prop-types";
 import PropTypes from "prop-types";
-import { useContext, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import Modal from "../modal/modal";
 import OrderDetails from "../order-details/order-details";
 import { BurgerContext } from "../../services/burger-constructor-context";
+import { checkResponse, postOrder } from "../../utils/burger-api";
 
 
 const BurgerConstructor = () => {
@@ -24,20 +25,8 @@ const BurgerConstructor = () => {
         const data = dataContext.ingredients.map(item => {
             return item._id
         })
-        fetch('https://norma.nomoreparties.space/api/orders', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                ingredients: data
-            })
-        }).then(res => {
-            if (res.ok) {
-                return res.json()
-            }
-            return Promise.reject(`Ошибка ${res.status}`);
-        })
+        postOrder(data)
+            .then(checkResponse)
             .then(res => {
                 setPrice(res.order.number)
                 setModal(true);
@@ -49,7 +38,7 @@ const BurgerConstructor = () => {
         setModal(false);
     }
 
-    const [...data] = dataContext.ingredients;
+    const [...data] = useMemo(() => dataContext.ingredients, [dataContext.ingredients]);
     const bun = data.find(item => item.type === 'bun')
     const ingredients = data.filter(item => item.type !== 'bun')
 

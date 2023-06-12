@@ -1,6 +1,6 @@
 import style from './burger-ingredients.module.css';
 
-import { useContext, useEffect, useReducer, useState } from "react";
+import { useContext, useEffect, useMemo, useReducer, useState } from "react";
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import { ingredientPropType } from "../../utils/prop-types";
 import PropTypes from "prop-types";
@@ -57,7 +57,7 @@ const BurgerIngredients = () => {
         setCurrent(() =>  e);
     }
 
-    const [...data] = dataContext.initial;
+    const [...data] = useMemo(() => dataContext.initial, [dataContext.initial])
     const bun = data.filter(item => item.type === 'bun');
     const main = data.filter(item => item.type === 'main');
     const sauce = data.filter(item => item.type === 'sauce');
