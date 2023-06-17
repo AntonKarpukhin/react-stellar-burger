@@ -1,16 +1,21 @@
 import style from './order-details.module.css';
 
 import iconDone from '../../images/done.jpg'
-import { useState } from "react";
-import PropTypes from "prop-types";
+import { useSelector } from "react-redux";
 
-const OrderDetails = (props) => {
+const OrderDetails = () => {
 
-    const [current, setCurrent] = useState(props.price)
+    const { orderID, feedRequest, feedFailed } = useSelector(state => state.order)
+
+    if (feedRequest && !orderID) {
+        return  <h4>Загрузка компонентов</h4>
+    } else if (feedFailed) {
+        return <h5>Ошибка загрузки</h5>
+    }
 
     return (
         <div className={style.wrapper}>
-            <p className='text text_type_digits-large'>{current}</p>
+            <p className='text text_type_digits-large'>{orderID}</p>
             <p className="text text_type_main-medium mt-8">идентификатор заказа</p>
             <div className='mt-15'>
                 <img src={iconDone} alt="иконка подтверждения"/>
@@ -19,10 +24,6 @@ const OrderDetails = (props) => {
             <p className={`${style.paragraph} text text_type_main-default mt-2`}>Дождитесь готовности на орбитальной станции</p>
         </div>
     )
-}
-
-OrderDetails.propTypes = {
-    price: PropTypes.number
 }
 
 export default OrderDetails;
