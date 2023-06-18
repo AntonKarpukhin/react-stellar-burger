@@ -4,7 +4,7 @@ import { useDrag, useDrop } from "react-dnd";
 import { useRef } from "react";
 import { useDispatch } from "react-redux";
 import { moveIngredient } from "../../services/actions/constructorBurger";
-
+import PropTypes from "prop-types";
 
 const IngredientConstructor = (props) => {
 
@@ -58,6 +58,13 @@ const IngredientConstructor = (props) => {
             </div>
         </div>
     )
+}
+
+IngredientConstructor.propTypes = {
+    item: PropTypes.object,
+    removeIngredient: PropTypes.func,
+    index: PropTypes.number
+
 }
 
 export default IngredientConstructor;

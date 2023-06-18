@@ -13,7 +13,7 @@ const Ingredient = (props) => {
     const {item, openModal} = props
     const newItem = {...item, key: uuidv4()}
 
-    const [{isDragging}, dragRef] = useDrag({
+    const [, dragRef] = useDrag({
         type: 'ingredient',
         item: newItem,
         collect: monitor => ({
@@ -27,7 +27,7 @@ const Ingredient = (props) => {
         } else {
             setCounter(ingredients.filter(ingredient => ingredient._id === newItem._id).length);
         }
-    },[ingredients, bun]);
+    },[ingredients, bun, newItem._id]);
 
     const setIngredient = (newItem) => {
         openModal(newItem)

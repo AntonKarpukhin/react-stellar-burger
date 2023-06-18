@@ -4,7 +4,7 @@ import {
     Button, ConstructorElement,
     CurrencyIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import Modal from "../modal/modal";
 import OrderDetails from "../order-details/order-details";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,7 +19,6 @@ const BurgerConstructor = () => {
     const ingredients = useSelector(state => state.constructorBurger.ingredients)
     const { ingredientsID } = useSelector(state => state.order)
     const [modal, setModal] = useState(false);
-    const [price, setPrice] = useState(0);
     const dispatch = useDispatch();
 
     const [{isHover}, dropTarget] = useDrop({
@@ -33,19 +32,15 @@ const BurgerConstructor = () => {
         })
     })
 
-    useEffect(() => {
-        if (!bun && ingredients.length > 0) {
-            setPrice(fullPrice(ingredients, {price: 0}))
+    const fullPrice = useMemo(() => {
+        if (!bun && ingredients && ingredients.length > 0) {
+            return [...ingredients, {price: 0}].map(item => item.price).reduce((a, b) => a + b, 0)
         } else if (bun && ingredients.length === 0){
-            setPrice(fullPrice([], bun))
+            return bun.price
         } else if (bun && ingredients.length > 0) {
-            setPrice(fullPrice(ingredients, bun))
+            return [...ingredients, bun].map(item => item.price).reduce((a, b) => a + b, 0)
         }
     }, [ingredients, bun])
-
-    const fullPrice = (ingredients, bun) => {
-        return [...ingredients, bun].map(item => item.price ? item.price : 0).reduce((a, b) => a + b, 0)
-    }
 
     const openModal = () => {
         dispatch(postFeed(ingredientsID));
@@ -94,7 +89,7 @@ const BurgerConstructor = () => {
             </div>
             <div className={`${style.fullPrice} mr-8`}>
                 <div className={style.wrapperFullPrice}>
-                    <p className="text text_type_digits-medium">{price ? price : 0}</p>
+                    <p className="text text_type_digits-medium">{fullPrice ? fullPrice : 0}</p>
                     <CurrencyIcon type="primary" />
                 </div>
                 <Button onClick={openModal} htmlType="button" type="primary" size="large">

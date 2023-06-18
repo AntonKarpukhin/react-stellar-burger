@@ -1,5 +1,5 @@
 import style from './burger-ingredients.module.css';
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import Modal from "../modal/modal";
 import IngredientDetails from "../ingredient-details/ingredient-details";
@@ -12,16 +12,17 @@ const BurgerIngredients = () => {
 
     const ingredients = useSelector(state => state.ingredients.ingredients.data)
     const { feedRequest, feedFailed } = useSelector(state => state.ingredients)
+
     const dispatch = useDispatch();
 
     const [current, setCurrent] = useState('one');
     const [modal, setModal] = useState(false);
 
-    const refBun = useRef();
-    const refSauce = useRef();
-    const refMain = useRef();
+    const refBun = useRef(null);
+    const refSauce = useRef(null);
+    const refMain = useRef(null);
 
-    const checkScroll = () => {
+    const checkScroll = useCallback(() => {
         const topBun = refBun.current.getBoundingClientRect();
         const topMain = refMain.current.getBoundingClientRect();
         const topSauce = refSauce.current.getBoundingClientRect();
@@ -33,14 +34,13 @@ const BurgerIngredients = () => {
         } else if (topBun.top < 236 && topMain.top < -600 && topSauce.top < 600) {
             setCurrent('three')
         }
-    }
+    })
 
     useEffect(() => {
         const scroll = document.querySelector('#scroll')
         if (scroll) {
             scroll.addEventListener('scroll', checkScroll)
         }
-
     }, [checkScroll]);
 
     useEffect(() => {
@@ -57,32 +57,50 @@ const BurgerIngredients = () => {
         dispatch(removeIngredient())
     }
 
-    const changeCurrent = (e) => {
+    const changeCurrentAndScroll = (e, ref) => {
         setCurrent(() =>  e);
+        ref.current.scrollIntoView();
     }
 
-    if (feedRequest) {
+    const getData = useMemo(() => {
+        if (feedRequest) {
+            return  'loading'
+        } else if (feedFailed) {
+            return 'error'
+        } else {
+            const bun = ingredients.filter(item => item.type === 'bun');
+            const main =  ingredients.filter(item => item.type === 'main');
+            const sauce = ingredients.filter(item => item.type === 'sauce');
+
+            return  {
+                bun,
+                main,
+                sauce
+            }
+        }
+
+    }, [ingredients, feedRequest, feedFailed])
+
+    if (getData === 'loading') {
         return  <h4>Загрузка компонентов</h4>
-    } else if (feedFailed) {
+    } else if (getData === 'error') {
         return <h5>Ошибка загрузки</h5>
     }
 
-    const bun = ingredients.filter(item => item.type === 'bun');
-    const main = ingredients.filter(item => item.type === 'main');
-    const sauce = ingredients.filter(item => item.type === 'sauce');
+    const {bun, main, sauce} = getData
 
     return (
         <section className={style.section}>
-            <div>
+            <div >
                 <h1 className='text text_type_main-large pt-10'>Соберите бургер</h1>
                 <nav className={`${style.navigation} pt-5`}>
-                    <Tab value="one" active={current === 'one'} onClick={changeCurrent}>
+                    <Tab value="one" active={current === 'one'} onClick={(e) => changeCurrentAndScroll(e, refBun)}>
                         Булки
                     </Tab>
-                    <Tab value="two" active={current === 'two'} onClick={changeCurrent}>
+                    <Tab value="two" active={current === 'two'} onClick={(e) => changeCurrentAndScroll(e, refMain)}>
                         Соусы
                     </Tab>
-                    <Tab value="three" active={current === 'three'} onClick={changeCurrent}>
+                    <Tab value="three" active={current === 'three'} onClick={(e) => changeCurrentAndScroll(e, refSauce)}>
                         Начинки
                     </Tab>
                 </nav>

@@ -22,6 +22,7 @@ const ingredients = (state = initialState, action) => {
         case "GET_INGREDIENTS_FAILED":
             return {
                 ...state,
+                ingredients: [],
                 feedRequest: false,
                 feedFailed: true,
             }

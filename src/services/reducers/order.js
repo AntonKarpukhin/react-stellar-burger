@@ -23,6 +23,8 @@ const order = (state = initialState, action) => {
         case "POST_ORDER_FAILED":
             return {
                 ...state,
+                orderID: 0,
+                ingredientsID: [],
                 feedRequest: false,
                 feedFailed: true,
             }
