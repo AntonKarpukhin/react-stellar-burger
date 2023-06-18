@@ -28,19 +28,22 @@ const BurgerIngredients = () => {
         const topSauce = refSauce.current.getBoundingClientRect();
 
         if (topBun.top >= 236 && topMain.top > 414 && topSauce.top > 600) {
-            setCurrent('one')
+            setCurrent("one");
         } else if (topBun.top < 236 && topMain.top < 316 && topSauce.top > 600) {
-            setCurrent('two')
+            setCurrent("two");
         } else if (topBun.top < 236 && topMain.top < -600 && topSauce.top < 600) {
-            setCurrent('three')
+            setCurrent("three");
         }
-    })
+    }, []);
 
     useEffect(() => {
-        const scroll = document.querySelector('#scroll')
+        const scroll = document.querySelector("#scroll");
         if (scroll) {
-            scroll.addEventListener('scroll', checkScroll)
+            scroll.addEventListener("scroll", checkScroll);
         }
+        return () => {
+            scroll.removeEventListener("scroll", checkScroll);
+        };
     }, [checkScroll]);
 
     useEffect(() => {
@@ -62,32 +65,23 @@ const BurgerIngredients = () => {
         ref.current.scrollIntoView();
     }
 
-    const getData = useMemo(() => {
-        if (feedRequest) {
-            return  'loading'
-        } else if (feedFailed) {
-            return 'error'
-        } else {
-            const bun = ingredients.filter(item => item.type === 'bun');
-            const main =  ingredients.filter(item => item.type === 'main');
-            const sauce = ingredients.filter(item => item.type === 'sauce');
-
-            return  {
-                bun,
-                main,
-                sauce
-            }
+    const { bun, main, sauce } = useMemo(() => {
+        if (!ingredients?.length) {
+            return { bun: [], main: [], sauce: [] };
         }
 
-    }, [ingredients, feedRequest, feedFailed])
+        return {
+            bun: ingredients.filter((item) => item.type === "bun"),
+            main: ingredients.filter((item) => item.type === "main"),
+            sauce: ingredients.filter((item) => item.type === "sauce"),
+        };
+    }, [ingredients]);
 
-    if (getData === 'loading') {
+    if (feedRequest) {
         return  <h4>Загрузка компонентов</h4>
-    } else if (getData === 'error') {
+    } else if (feedFailed) {
         return <h5>Ошибка загрузки</h5>
     }
-
-    const {bun, main, sauce} = getData
 
     return (
         <section className={style.section}>

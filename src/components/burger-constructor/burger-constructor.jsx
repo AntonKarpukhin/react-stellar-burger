@@ -36,9 +36,10 @@ const BurgerConstructor = () => {
         if (!bun && ingredients && ingredients.length > 0) {
             return [...ingredients, {price: 0}].map(item => item.price).reduce((a, b) => a + b, 0)
         } else if (bun && ingredients.length === 0){
-            return bun.price
+            return bun.price * 2
         } else if (bun && ingredients.length > 0) {
-            return [...ingredients, bun].map(item => item.price).reduce((a, b) => a + b, 0)
+            const newBun = {...bun, price: bun.price * 2}
+            return [...ingredients, newBun].map(item => item.price).reduce((a, b) => a + b, 0)
         }
     }, [ingredients, bun])
 
