@@ -16,4 +16,5 @@
 	overflow: scroll;
 	height: 756px;
 	overflow-x: hidden;
+	scroll-behavior: smooth;
 }

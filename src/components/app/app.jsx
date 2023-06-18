@@ -2,37 +2,21 @@ import style from "./app.module.css";
 import AppHeader from "../app-header/app-header";
 import BurgerIngredients from "../burger-ingredients/burger-ingredients";
 import BurgerConstructor from "../burger-constructor/burger-constructor";
-import {  Provider } from "../../services/burger-constructor-context";
-import { useEffect, useMemo, useState } from "react";
-import { checkResponse, initialData } from "../../utils/burger-api";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 function App() {
 
-    const [data, setData] = useState({initial: [], ingredients: [], count: 0});
-
-    const contextValue = useMemo(() => {
-        return [data, setData];
-    }, [data, setData]);
-
-    useEffect(() => {
-       initialData()
-            .then(checkResponse)
-            .then(res => setData(prevState => ({...prevState, initial: res.data})))
-            .catch(err => console.log(err))
-    }, [])
-
-
   return (
-    <Provider value={contextValue}>
-        <div className={style.app}>
-            <AppHeader/>
+    <div className={style.app}>
+        <AppHeader/>
+        <DndProvider backend={HTML5Backend}>
             <main className={style.main}>
                 <BurgerIngredients />
                 <BurgerConstructor />
             </main>
-        </div>
-    </Provider>
-
+        </DndProvider>
+    </div>
   );
 }
 

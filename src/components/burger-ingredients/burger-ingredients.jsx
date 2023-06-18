@@ -1,110 +1,127 @@
 import style from './burger-ingredients.module.css';
-
-import { useContext, useEffect, useMemo, useReducer, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
-import { ingredientPropType } from "../../utils/prop-types";
-import PropTypes from "prop-types";
 import Modal from "../modal/modal";
 import IngredientDetails from "../ingredient-details/ingredient-details";
-import { BurgerContext } from "../../services/burger-constructor-context";
 import Ingredient from "../ingredient/ingredient";
-
-function reducer(state, action) {
-    switch (action.type) {
-        case "add":
-            return { counter: state.counter + action.payload };
-        default:
-            throw new Error(`Wrong type of action: ${action.type}`);
-    }
-}
+import { useSelector, useDispatch } from "react-redux";
+import { getFeed } from "../../services/actions/ingredients";
+import { openIngredient, removeIngredient } from "../../services/actions/ingredient";
 
 const BurgerIngredients = () => {
 
+    const ingredients = useSelector(state => state.ingredients.ingredients.data)
+    const { feedRequest, feedFailed } = useSelector(state => state.ingredients)
+
+    const dispatch = useDispatch();
+
     const [current, setCurrent] = useState('one');
     const [modal, setModal] = useState(false);
-    const [cardModal, setCardModal] = useState({})
 
-    const [dataContext, setDataContext] = useContext(BurgerContext);
-    const [counter, dispatch] = useReducer(reducer, {counter: dataContext.count});
+    const refBun = useRef(null);
+    const refSauce = useRef(null);
+    const refMain = useRef(null);
+
+    const checkScroll = useCallback(() => {
+        const topBun = refBun.current.getBoundingClientRect();
+        const topMain = refMain.current.getBoundingClientRect();
+        const topSauce = refSauce.current.getBoundingClientRect();
+
+        if (topBun.top >= 236 && topMain.top > 414 && topSauce.top > 600) {
+            setCurrent("one");
+        } else if (topBun.top < 236 && topMain.top < 316 && topSauce.top > 600) {
+            setCurrent("two");
+        } else if (topBun.top < 236 && topMain.top < -600 && topSauce.top < 600) {
+            setCurrent("three");
+        }
+    }, []);
 
     useEffect(() => {
-        setDataContext(prevState => {
-            return {...prevState, count: counter}
-        });
-    }, [dataContext.ingredients])
+        const scroll = document.querySelector("#scroll");
+        if (scroll) {
+            scroll.addEventListener("scroll", checkScroll);
+        }
+        return () => {
+            scroll.removeEventListener("scroll", checkScroll);
+        };
+    }, [checkScroll]);
+
+    useEffect(() => {
+        dispatch(getFeed())
+    }, [])
 
     const openModal = (item) => {
-        setCardModal(item);
-        // setModal(true);
-        dispatch({type: 'add', payload: +item.price})
-        setDataContext(prevState => {
-            const oldState = {...prevState, ingredients: [...prevState.ingredients, item]}
-            const newState = oldState.ingredients.reduce((acc, burg) => {
-                if (acc.includes(burg)) {
-                    return acc;
-                }
-                return [...acc, burg];
-            }, []);
-            return {...prevState, ingredients: newState}
-        })
+        dispatch(openIngredient(item))
+        setModal(true);
     }
 
     const closeModal = () => {
         setModal(false);
+        dispatch(removeIngredient())
     }
 
-    const changeCurrent = (e) => {
+    const changeCurrentAndScroll = (e, ref) => {
         setCurrent(() =>  e);
+        ref.current.scrollIntoView();
     }
 
-    const [...data] = useMemo(() => dataContext.initial, [dataContext.initial])
-    const bun = data.filter(item => item.type === 'bun');
-    const main = data.filter(item => item.type === 'main');
-    const sauce = data.filter(item => item.type === 'sauce');
+    const { bun, main, sauce } = useMemo(() => {
+        if (!ingredients?.length) {
+            return { bun: [], main: [], sauce: [] };
+        }
+
+        return {
+            bun: ingredients.filter((item) => item.type === "bun"),
+            main: ingredients.filter((item) => item.type === "main"),
+            sauce: ingredients.filter((item) => item.type === "sauce"),
+        };
+    }, [ingredients]);
+
+    if (feedRequest) {
+        return  <h4>Загрузка компонентов</h4>
+    } else if (feedFailed) {
+        return <h5>Ошибка загрузки</h5>
+    }
 
     return (
         <section className={style.section}>
-            <div>
+            <div >
                 <h1 className='text text_type_main-large pt-10'>Соберите бургер</h1>
                 <nav className={`${style.navigation} pt-5`}>
-                    <Tab value="one" active={current === 'one'} onClick={changeCurrent}>
+                    <Tab value="one" active={current === 'one'} onClick={(e) => changeCurrentAndScroll(e, refBun)}>
                         Булки
                     </Tab>
-                    <Tab value="two" active={current === 'two'} onClick={changeCurrent}>
+                    <Tab value="two" active={current === 'two'} onClick={(e) => changeCurrentAndScroll(e, refMain)}>
                         Соусы
                     </Tab>
-                    <Tab value="three" active={current === 'three'} onClick={changeCurrent}>
+                    <Tab value="three" active={current === 'three'} onClick={(e) => changeCurrentAndScroll(e, refSauce)}>
                         Начинки
                     </Tab>
                 </nav>
             </div>
-            <div className={`${style.wrapper} custom-scroll`}>
-                <div className="pt-10" >
+            <div id='scroll' className={`${style.wrapper} custom-scroll`}>
+                <div ref={refBun}   className="pt-10" >
                     <p className="text text_type_main-medium">Булки</p>
                     <div className={`${style.wrapperItem} pt-6 pl-4`}>
-                        {bun.map(item => <Ingredient key={item._id} openModal={() => openModal(item)} item={item}/>) }
+                        {bun.map(item => <Ingredient key={item._id} openModal={openModal} item={item}/>) }
                     </div>
                 </div>
-                <div className="pt-10" >
+                <div ref={refMain} className="pt-10" >
                     <p className="text text_type_main-medium">Соусы</p>
                     <div className={`${style.wrapperItem} pt-6 pl-4`}>
-                        {main.map(item => <Ingredient key={item._id} openModal={() => openModal(item)} item={item}/>)}
+                        {main.map(item => <Ingredient key={item._id} openModal={openModal} item={item}/>)}
                     </div>
                 </div>
-                <div className="pt-10" >
+                <div ref={refSauce}  className="pt-10" >
                     <p className="text text_type_main-medium">Начинки</p>
                     <div className={`${style.wrapperItem} pt-6 pl-4`}>
-                        {sauce.map(item => <Ingredient key={item._id} openModal={() => openModal(item)} item={item}/>)}
+                        {sauce.map(item => <Ingredient key={item._id} openModal={openModal} item={item}/>)}
                     </div>
                 </div>
             </div>
-            {modal && <Modal closeModal={closeModal}><IngredientDetails card={cardModal}/></Modal>}
+            {modal && <Modal closeModal={closeModal}><IngredientDetails /></Modal>}
         </section>
     )
 }
-
-// BurgerIngredients.propTypes = {
-//     data: PropTypes.arrayOf(ingredientPropType)
-// }
 
 export default BurgerIngredients;

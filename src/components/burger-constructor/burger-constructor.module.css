@@ -6,6 +6,11 @@
 
 .wrapper {
 	min-height: 656px;
+	box-sizing: border-box;
+}
+
+.wrapperActive {
+	outline: 1px solid lightgreen;
 }
 
 .fullPrice {
