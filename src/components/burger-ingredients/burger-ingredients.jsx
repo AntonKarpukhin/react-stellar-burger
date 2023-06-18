@@ -1,5 +1,5 @@
 import style from './burger-ingredients.module.css';
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import Modal from "../modal/modal";
 import IngredientDetails from "../ingredient-details/ingredient-details";
@@ -22,7 +22,11 @@ const BurgerIngredients = () => {
     const refSauce = useRef(null);
     const refMain = useRef(null);
 
-    const checkScroll = useCallback(() => {
+    useEffect(() => {
+        dispatch(getFeed())
+    }, [])
+
+    const checkScroll = () => {
         const topBun = refBun.current.getBoundingClientRect();
         const topMain = refMain.current.getBoundingClientRect();
         const topSauce = refSauce.current.getBoundingClientRect();
@@ -34,21 +38,7 @@ const BurgerIngredients = () => {
         } else if (topBun.top < 236 && topMain.top < -600 && topSauce.top < 600) {
             setCurrent("three");
         }
-    }, []);
-
-    useEffect(() => {
-        const scroll = document.querySelector("#scroll");
-        if (scroll) {
-            scroll.addEventListener("scroll", checkScroll);
-        }
-        return () => {
-            scroll.removeEventListener("scroll", checkScroll);
-        };
-    }, [checkScroll]);
-
-    useEffect(() => {
-        dispatch(getFeed())
-    }, [])
+    };
 
     const openModal = (item) => {
         dispatch(openIngredient(item))
@@ -99,7 +89,7 @@ const BurgerIngredients = () => {
                     </Tab>
                 </nav>
             </div>
-            <div id='scroll' className={`${style.wrapper} custom-scroll`}>
+            <div onScroll={checkScroll} id='scroll' className={`${style.wrapper} custom-scroll`}>
                 <div ref={refBun}   className="pt-10" >
                     <p className="text text_type_main-medium">Булки</p>
                     <div className={`${style.wrapperItem} pt-6 pl-4`}>
