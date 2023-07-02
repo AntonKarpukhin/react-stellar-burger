@@ -6,6 +6,7 @@ import { useDrag } from "react-dnd";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
+
 const Ingredient = (props) => {
 
     const { ingredients, bun } = useSelector(state => state.constructorBurger);

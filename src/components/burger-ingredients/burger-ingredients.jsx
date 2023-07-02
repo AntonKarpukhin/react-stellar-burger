@@ -5,22 +5,26 @@ import Modal from "../modal/modal";
 import IngredientDetails from "../ingredient-details/ingredient-details";
 import Ingredient from "../ingredient/ingredient";
 import { useSelector, useDispatch } from "react-redux";
-import { getFeed } from "../../services/actions/ingredients";
-import { openIngredient, removeIngredient } from "../../services/actions/ingredient";
+import { getFeed } from "../../services/actions/ingredientsAction";
+import { openIngredient, removeIngredient } from "../../services/actions/ingredientAction";
+import { Link, useLocation } from "react-router-dom";
 
-const BurgerIngredients = () => {
+const BurgerIngredients = (props) => {
 
     const ingredients = useSelector(state => state.ingredients.ingredients.data)
     const { feedRequest, feedFailed } = useSelector(state => state.ingredients)
 
     const dispatch = useDispatch();
 
+    const {openModal} = props
+
     const [current, setCurrent] = useState('one');
-    const [modal, setModal] = useState(false);
 
     const refBun = useRef(null);
     const refSauce = useRef(null);
     const refMain = useRef(null);
+
+    let location = useLocation();
 
     useEffect(() => {
         dispatch(getFeed())
@@ -40,15 +44,6 @@ const BurgerIngredients = () => {
         }
     };
 
-    const openModal = (item) => {
-        dispatch(openIngredient(item))
-        setModal(true);
-    }
-
-    const closeModal = () => {
-        setModal(false);
-        dispatch(removeIngredient())
-    }
 
     const changeCurrentAndScroll = (e, ref) => {
         setCurrent(() =>  e);
@@ -93,23 +88,23 @@ const BurgerIngredients = () => {
                 <div ref={refBun}   className="pt-10" >
                     <p className="text text_type_main-medium">Булки</p>
                     <div className={`${style.wrapperItem} pt-6 pl-4`}>
-                        {bun.map(item => <Ingredient key={item._id} openModal={openModal} item={item}/>) }
+                        {bun.map(item => <Link to={{pathname: `/ingredient/${item._id}`, state: { background: location }}}  key={item._id}> <Ingredient openModal={openModal} item={item}/>) </Link>) }
                     </div>
                 </div>
                 <div ref={refMain} className="pt-10" >
                     <p className="text text_type_main-medium">Соусы</p>
                     <div className={`${style.wrapperItem} pt-6 pl-4`}>
-                        {main.map(item => <Ingredient key={item._id} openModal={openModal} item={item}/>)}
+                        {main.map(item => <Link to={{pathname: `/ingredient/${item._id}`, state: { background: location }}}  key={item._id}> <Ingredient openModal={openModal} item={item}/>) </Link>)}
                     </div>
                 </div>
                 <div ref={refSauce}  className="pt-10" >
                     <p className="text text_type_main-medium">Начинки</p>
                     <div className={`${style.wrapperItem} pt-6 pl-4`}>
-                        {sauce.map(item => <Ingredient key={item._id} openModal={openModal} item={item}/>)}
+                        {sauce.map(item => <Link to={{pathname: `/ingredient/${item._id}`, state: { background: location }}}  key={item._id}> <Ingredient openModal={openModal} item={item}/>) </Link> )}
                     </div>
                 </div>
             </div>
-            {modal && <Modal closeModal={closeModal}><IngredientDetails /></Modal>}
+            {/*{modal && <Modal closeModal={closeModal}><IngredientDetails /></Modal>}*/}
         </section>
     )
 }

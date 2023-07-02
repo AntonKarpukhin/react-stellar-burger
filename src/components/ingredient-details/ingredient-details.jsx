@@ -2,6 +2,7 @@ import style from './ingredient-details.module.css';
 
 import { Fragment } from "react";
 import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 
 
 const IngredientDetails = () => {
