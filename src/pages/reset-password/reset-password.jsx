@@ -1,15 +1,16 @@
 import style from './reset-password.module.css';
 import { Button, Input, PasswordInput } from "@ya.praktikum/react-developer-burger-ui-components";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { checkResponse, saveNewPassword } from "../../utils/burger-api";
 import { useSelector } from "react-redux";
+import { useForm } from "../../hooks/useForm";
+import { routeLogin, routeMain } from "../../utils/data";
 
 
 export const ResetPassword = () => {
 
-    const [passwordValue, setPasswordValue] = useState('')
-    const [nameValue, setNameValue] = useState('')
+    const {values, handleChange} = useForm({password: '', token: ''});
 
     const user = useSelector(state => state.userReducer);
 
@@ -17,37 +18,32 @@ export const ResetPassword = () => {
     const location = localStorage.getItem('path')
 
     useEffect(() => {
-        if (user.isAuthenticated) navigate('/')
+        if (user.isAuthenticated) navigate(routeMain)
         if (location) {
             localStorage.removeItem('path')
         } else {
-            navigate('/')
+            navigate(routeMain)
         }
     },[])
 
+    const postNewPassword = (e) => {
+        e.preventDefault();
+        if (!values.password || !values.token) return
 
-    const onChangePassword = e => {
-        setPasswordValue(e.target.value)
-    }
-
-    const postNewPassword = () => {
-
-        if (!passwordValue) return
-
-        saveNewPassword(passwordValue)
+        saveNewPassword(values)
             .then(res => checkResponse(res))
-            .then(res => navigate('/login'))
+            .then(res => navigate(routeLogin))
     }
 
     return (
         <section className={style.reset}>
-            <div className={style.wrapper}>
+            <form onSubmit={postNewPassword} className={style.wrapper}>
                 <p className="text text_type_main-medium">
                     Восстановление пароля
                 </p>
                 <PasswordInput
-                    onChange={onChangePassword}
-                    value={passwordValue}
+                    onChange={handleChange}
+                    value={values.password}
                     name={'password'}
                     extraClass="mb-2"
                     placeholder={'Введите новый пароль'}
@@ -55,21 +51,21 @@ export const ResetPassword = () => {
                 <Input
                     type={'text'}
                     placeholder={'Введите код из письма'}
-                    onChange={e => setNameValue(e.target.value)}
-                    value={nameValue}
-                    name={'name'}
+                    onChange={handleChange}
+                    value={values.token}
+                    name={'token'}
                     error={false}
                     errorText={'Ошибка'}
                     size={'default'}
                     extraClass="ml-1"
                 />
-                <Button onClick={postNewPassword} htmlType="submit" type="primary" size="medium">
+                <Button htmlType="submit" type="primary" size="medium">
                     Сохранить
                 </Button>
-            </div>
+            </form>
             <div className={style.wrapperDescription}>
                 <p className="text text_type_main-default">
-                    Вспомнили пароль? <Link to="/login" className={style.span}>Войти</Link>
+                    Вспомнили пароль? <Link to={routeLogin} className={style.span}>Войти</Link>
                 </p>
             </div>
         </section>

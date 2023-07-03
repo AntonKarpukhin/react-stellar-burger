@@ -1,52 +1,47 @@
 import style from './forgot-password.module.css'
 import { Button, EmailInput } from "@ya.praktikum/react-developer-burger-ui-components";
-import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { checkResponse, resetPassword } from "../../utils/burger-api";
+import { useForm } from "../../hooks/useForm";
+import { routeLogin, routeResetPassword } from "../../utils/data";
 
 export const ForgotPassword = () => {
 
-    const [emailValue, setEmailValue] = useState('')
+    const {values, handleChange} = useForm({email: ''});
 
     const navigate = useNavigate();
     const location = useLocation()
 
     localStorage.setItem('path', location.pathname)
 
-
-    const onChangeEmail = e => {
-        setEmailValue(e.target.value)
-    }
-
-    const resPassword = () => {
-
-        if (!emailValue) return
-
-        resetPassword(emailValue)
+    const resPassword = (e) => {
+        e.preventDefault();
+        if (!values) return
+        resetPassword(values)
             .then(res => checkResponse(res))
-            .then(res => navigate('/reset-password'))
+            .then(res => navigate(routeResetPassword))
     }
 
     return (
         <section className={style.forgot}>
-            <div className={style.wrapper}>
+            <form onSubmit={resPassword} className={style.wrapper}>
                 <p className="text text_type_main-medium">
                     Восстановление пароля
                 </p>
                 <EmailInput
-                    onChange={onChangeEmail}
-                    value={emailValue}
+                    onChange={handleChange}
+                    value={values.email}
                     name={'email'}
                     isIcon={false}
                     placeholder='Укажите e-mail'
                 />
-                <Button onClick={resPassword} htmlType="submit" type="primary" size="medium">
+                <Button  htmlType="submit" type="primary" size="medium">
                     Восстановить
                 </Button>
-            </div>
+            </form>
             <div className={style.wrapperDescription}>
                 <p className="text text_type_main-default">
-                    Вспомнили пароль? <Link to="/login" className={style.span}>Войти</Link>
+                    Вспомнили пароль? <Link to={routeLogin} className={style.span}>Войти</Link>
                 </p>
             </div>
         </section>

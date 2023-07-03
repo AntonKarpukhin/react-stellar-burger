@@ -1,65 +1,54 @@
 import style from './entrance.module.css';
-import { useState } from "react";
 import { Button, EmailInput, PasswordInput } from "@ya.praktikum/react-developer-burger-ui-components";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getLoginData } from "../../services/actions/userAction";
+import { useForm } from "../../hooks/useForm";
+import { routeForgotPassword, routeMain, routeRegister } from "../../utils/data";
 
 export const Entrance = () => {
 
-    const [emailValue, setEmailValue] = useState('')
-    const [passwordValue, setPasswordValue] = useState('')
+    const {values, handleChange} = useForm({email: '', password: ''});
 
     const user = useSelector(state => state.userReducer)
     const dispatch = useDispatch();
 
     const navigate = useNavigate();
 
-    const onChangeEmail = e => {
-        setEmailValue(e.target.value)
-    }
-
-    const onChangePassword = e => {
-        setPasswordValue(e.target.value)
-    }
-
-    const onEntrance = () => {
-        const data = {
-            email: emailValue,
-            password: passwordValue
-        }
-        dispatch(getLoginData( data))
-        if (user.isAuthenticated) navigate('/');
+    const onEntrance = (e) => {
+        e.preventDefault();
+        dispatch(getLoginData( values))
+        if (user.isAuthenticated) navigate(routeMain);
     }
 
     return (
         <section className={style.entrance}>
-            <div className={style.wrapper}>
+            <form  onSubmit={onEntrance} className={style.wrapper}>
                 <p className="text text_type_main-medium">
                     Вход
                 </p>
                 <EmailInput
-                    onChange={onChangeEmail}
-                    value={emailValue}
+                    onChange={handleChange}
+                    value={values.email}
                     name={'email'}
                     isIcon={false}
                 />
                 <PasswordInput
-                    onChange={onChangePassword}
-                    value={passwordValue}
+                    onChange={handleChange}
+                    value={values.password}
                     name={'password'}
                     extraClass="mb-2"
                 />
-                <Button onClick={onEntrance} htmlType="submit" type="primary" size="medium">
+                <Button htmlType="submit" type="primary" size="medium">
                     Войти
                 </Button>
-            </div>
+            </form>
             <div className={style.wrapperDescription}>
                 <p className="text text_type_main-default">
-                    Вы — новый пользователь? <Link to="/register" className={style.span}>Зарегистрироваться</Link>
+                    Вы — новый пользователь? <Link to={routeRegister} className={style.span}>Зарегистрироваться</Link>
                 </p>
                 <p className="text text_type_main-default">
-                    Забыли пароль? <Link to="/forgot-password" className={style.span}>Восстановить пароль</Link>
+                    Забыли пароль? <Link to={routeForgotPassword} className={style.span}>Восстановить пароль</Link>
                 </p>
             </div>
         </section>

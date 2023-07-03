@@ -1,50 +1,45 @@
 import style from './registration.module.css';
 import { Button, EmailInput, Input, PasswordInput } from "@ya.praktikum/react-developer-burger-ui-components";
-import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { checkResponse, postRegistration } from "../../utils/burger-api";
+import { useForm } from "../../hooks/useForm";
+import { useDispatch } from "react-redux";
+import { checkUserAuth } from "../../services/actions/userAction";
+import { routeLogin, routeProfile } from "../../utils/data";
 
 export const Registration = () => {
 
-    const [emailValue, setEmailValue] = useState('')
-    const [passwordValue, setPasswordValue] = useState('')
-    const [nameValue, setNameValue] = useState('')
+    const {values, handleChange} = useForm({name: '', email: '', password: ''});
 
+    const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const onChangeEmail = e => {
-        setEmailValue(e.target.value)
-    }
+    const onClickRegistration = (e) => {
+        e.preventDefault();
+        if (!values.name || !values.email || !values.password) return
 
-    const onChangePassword = e => {
-        setPasswordValue(e.target.value)
-    }
-
-    const onClickRegistration = () => {
-        const data = {
-            email: emailValue,
-            password: passwordValue,
-            name: nameValue
-        }
-
-        if (!emailValue || !passwordValue || !nameValue) return
-
-        postRegistration(data)
+        postRegistration(values)
             .then(res => checkResponse(res))
-            .then(res => navigate('/login'))
+            .then(res => {
+                localStorage.setItem("accessToken", res.accessToken);
+                localStorage.setItem("refreshToken", res.refreshToken);
+                dispatch(checkUserAuth())
+                navigate(routeProfile)
+            })
+            .catch(err => console.log(err))
     }
 
     return (
         <section className={style.registration}>
-            <div className={style.wrapper}>
+            <form onSubmit={onClickRegistration} className={style.wrapper}>
                 <p className="text text_type_main-medium">
                     Регистрация
                 </p>
                 <Input
                     type={'text'}
                     placeholder={'Имя'}
-                    onChange={e => setNameValue(e.target.value)}
-                    value={nameValue}
+                    onChange={handleChange}
+                    value={values.name}
                     name={'name'}
                     error={false}
                     errorText={'Ошибка'}
@@ -52,27 +47,26 @@ export const Registration = () => {
                     extraClass="ml-1"
                 />
                 <EmailInput
-                    onChange={onChangeEmail}
-                    value={emailValue}
+                    onChange={handleChange}
+                    value={values.email}
                     name={'email'}
                     isIcon={false}
                 />
                 <PasswordInput
-                    onChange={onChangePassword}
-                    value={passwordValue}
+                    onChange={handleChange}
+                    value={values.password}
                     name={'password'}
                     extraClass="mb-2"
                 />
-                <Button onClick={onClickRegistration} htmlType="submit" type="primary" size="medium">
+                <Button htmlType="submit" type="primary" size="medium">
                     Зарегестрироваться
                 </Button>
-            </div>
+            </form>
             <div className={style.wrapperDescription}>
                 <p className="text text_type_main-default">
-                    Уже зарегестрированы? <Link to="/login" className={style.span}>Войти</Link>
+                    Уже зарегестрированы? <Link to={routeLogin} className={style.span}>Войти</Link>
                 </p>
             </div>
         </section>
     )
 }
-

@@ -1,7 +1,8 @@
 import style from './app-header.module.css';
-import {  NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { Logo, ProfileIcon, BurgerIcon, ListIcon, } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useSelector } from "react-redux";
+import { routeLogin, routeMain, routeProfile } from "../../utils/data";
 
 const AppHeader = () => {
 
@@ -9,9 +10,9 @@ const AppHeader = () => {
 
     const checkUser = () => {
         if (isAuthChecked) {
-            return '/profile'
+            return routeProfile
         }
-        return '/login'
+        return routeLogin
     }
 
     return (
@@ -19,7 +20,7 @@ const AppHeader = () => {
             <nav className={style.header__navigation}>
                 <div className={style.header__container}>
                     <BurgerIcon type="primary"/>
-                    <NavLink to='/' className={({ isActive }) => isActive ? `${style.linkActive} text text_type_main-default ml-2` : `${style.link} text text_type_main-default ml-2` } >Конструктор
+                    <NavLink to={routeMain} className={({ isActive }) => isActive ? `${style.linkActive} text text_type_main-default ml-2` : `${style.link} text text_type_main-default ml-2` } >Конструктор
                     </NavLink>
                 </div>
                 <div className={`${style.header__container} ml-2`}>
@@ -27,7 +28,9 @@ const AppHeader = () => {
                     <p className="text text_type_main-default ml-2">Лента заказов</p>
                 </div>
             </nav>
-            <Logo/>
+            <Link to={routeMain}>
+                <Logo/>
+            </Link>
             <NavLink to={checkUser()} className={({ isActive }) => isActive ? `${style.header__container} ${style.linkActive} text text_type_main-default ml-2` : `${style.header__container} ${style.link} text text_type_main-default ml-2` } >
                 <ProfileIcon type="secondary"/>
                 <p className="text text_type_main-default ml-2">Личный кабинет</p>

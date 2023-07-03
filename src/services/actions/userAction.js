@@ -1,7 +1,5 @@
 import {
-    checkResponse,
-    fetchWithRefresh, postLoginUser,
-    postLogOut
+    checkResponse, fetchWithRefresh, postLoginUser, postLogOut
 } from "../../utils/burger-api";
 
 export const getLoginData = data => dispatch => {

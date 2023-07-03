@@ -25,7 +25,7 @@ const fetchWithRefresh = async ( token, method, endpoint) => {
         method: method,
         headers: {
             'Content-Type': "application/json",
-            Authorization: token
+            authorization: token
         },
         body: JSON.stringify(endpoint)
     }
@@ -110,13 +110,15 @@ function resetPassword(data) {
 }
 
 function saveNewPassword(data) {
+    const {password, token} = data;
     return fetch(`${dataUrl}/password-reset/reset`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            data
+            password,
+            token
         })
     })
 }

@@ -13,6 +13,16 @@ import Modal from "../modal/modal";
 import IngredientDetails from "../ingredient-details/ingredient-details";
 import { checkUserAuth } from "../../services/actions/userAction";
 import { OnlyAuth, OnlyUnAuth } from "../protected-route/protected-route";
+import {
+    route404,
+    routeForgotPassword, routeIngredientId,
+    routeIngredients,
+    routeLogin,
+    routeMain,
+    routeProfile,
+    routeRegister,
+    routeResetPassword
+} from "../../utils/data";
 
 function App() {
 
@@ -36,20 +46,19 @@ function App() {
         <DndProvider backend={HTML5Backend}>
             <AppHeader/>
             <Routes location={background || location}>
-                <Route path="/login" element={<OnlyUnAuth component={<Entrance/>}/>}/>
-                <Route path="/register" element={<OnlyUnAuth component={<Registration/>}/>}/>
-                <Route path="/profile" element={<OnlyAuth component={<Profile/>}/>}/>
-                <Route path="/forgot-password" element={<OnlyUnAuth component={<ForgotPassword/>}/>}/>
-                {/*<Route path="/forgot-password" element={<ForgotPassword/>}/>*/}
-                <Route path="/reset-password" element={<ResetPassword/>}/>
-                <Route path="/" element={<Home/>}/>
-                <Route path="/ingredients/:ingredientId" element={<IngredientPage/>}/>
-                <Route path="*" element={<NotFound404/>}/>
+                <Route path={routeLogin} element={<OnlyUnAuth component={<Entrance/>}/>}/>
+                <Route path={routeRegister} element={<OnlyUnAuth component={<Registration/>}/>}/>
+                <Route path={routeProfile} element={<OnlyAuth component={<Profile/>}/>}/>
+                <Route path={routeForgotPassword} element={<OnlyUnAuth component={<ForgotPassword/>}/>}/>
+                <Route path={routeResetPassword} element={<ResetPassword/>}/>
+                <Route path={routeMain} element={<Home/>}/>
+                <Route path={`${routeIngredients}${routeIngredientId}`} element={<IngredientPage/>}/>
+                <Route path={route404} element={<NotFound404/>}/>
             </Routes>
             {background && (
                 <Routes>
                     <Route
-                        path='/ingredients/:ingredientId'
+                        path={`${routeIngredients}${routeIngredientId}`}
                         element={
                             <Modal closeModal={handleModalClose}>
                                 <IngredientDetails />

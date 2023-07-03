@@ -1,52 +1,28 @@
 import style from './profile.module.css';
 import { Button, EmailInput, Input, PasswordInput } from "@ya.praktikum/react-developer-burger-ui-components";
-import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { changeUserData, postLogOutUser } from "../../services/actions/userAction";
+import { useForm } from "../../hooks/useForm";
 
 export const Profile = () => {
 
-    const [nameValue, setNameValue] = useState('')
-    const [emailValue, setEmailValue] = useState('')
-    const [passwordValue, setPasswordValue] = useState('')
-
     const user = useSelector(state => state.userReducer);
+    const {values, handleChange, setValues} = useForm({name: user.name, email: user.login, password: ''});
 
     const dispatch = useDispatch();
-
-    useEffect(() => {
-        if (user.isAuthenticated) {
-            setEmailValue(user.login);
-            setNameValue(user.name);
-        }
-    },[user.isAuthenticated])
-
-
-    const onChangeEmail = e => {
-        setEmailValue(e.target.value)
-    }
-
-    const onChangePassword = e => {
-        setPasswordValue(e.target.value)
-    }
 
     const onLogOut = () => {
         dispatch(postLogOutUser(localStorage.getItem("refreshToken")))
     }
 
     const onCancel = () => {
-        setNameValue(user.name);
-        setEmailValue(user.login);
-        setPasswordValue('');
+        setValues(value => ({ ...value, name: user.name, email: user.login, password: '' }))
     }
 
-    const changeUser = () => {
-        const data = {
-            email: emailValue,
-            name: nameValue
-        }
-        dispatch(changeUserData('PATCH', data))
+    const changeUser = (e) => {
+        e.preventDefault();
+        dispatch(changeUserData('PATCH', values))
     }
 
     return (
@@ -75,12 +51,12 @@ export const Profile = () => {
                         изменить свои персональные данные
                     </p>
                 </div>
-                <div className={style.wrapperInput}>
+                <form onSubmit={changeUser} className={style.wrapperInput}>
                     <Input
                         type={'text'}
                         placeholder={'Имя'}
-                        onChange={e => setNameValue(e.target.value)}
-                        value={nameValue}
+                        onChange={handleChange}
+                        value={values.name}
                         name={'name'}
                         error={false}
                         errorText={'Ошибка'}
@@ -89,32 +65,30 @@ export const Profile = () => {
                         icon={"EditIcon"}
                     />
                     <EmailInput
-                        onChange={onChangeEmail}
-                        value={emailValue}
+                        onChange={handleChange}
+                        value={values.email}
                         name={'email'}
                         isIcon={false}
                         icon={"EditIcon"}
                         placeholder={'Логин'}
                     />
                     <PasswordInput
-                        onChange={onChangePassword}
-                        value={passwordValue}
+                        onChange={handleChange}
+                        value={values.password}
                         name={'password'}
                         extraClass="mb-2"
                         placeholder={'Пароль'}
                     />
                     <div className={style.wrapperButton}>
-                        <Button onClick={changeUser} htmlType="submit" type="primary" size="medium">
+                        <Button htmlType="submit" type="primary" size="medium">
                             Сохранить
                         </Button>
-                        <Button onClick={onCancel} htmlType="submit" type="primary" size="medium">
+                        <Button onClick={onCancel} htmlType="reset" type="primary" size="medium">
                             Отменить
                         </Button>
                     </div>
-                </div>
+                </form>
             </div>
-
-
         </section>
     )
 }
