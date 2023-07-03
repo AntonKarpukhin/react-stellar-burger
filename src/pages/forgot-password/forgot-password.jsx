@@ -1,24 +1,18 @@
 import style from './forgot-password.module.css'
 import { Button, EmailInput } from "@ya.praktikum/react-developer-burger-ui-components";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { checkResponse, resetPassword } from "../../utils/burger-api";
-import { useSelector } from "react-redux";
 
 export const ForgotPassword = () => {
 
     const [emailValue, setEmailValue] = useState('')
-
-    const user = useSelector(state => state.userReducer);
 
     const navigate = useNavigate();
     const location = useLocation()
 
     localStorage.setItem('path', location.pathname)
 
-    useEffect(() => {
-        if (user.isAuthenticated) navigate('/')
-    },[])
 
     const onChangeEmail = e => {
         setEmailValue(e.target.value)

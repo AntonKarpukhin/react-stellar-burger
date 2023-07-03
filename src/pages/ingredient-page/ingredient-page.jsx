@@ -1,16 +1,28 @@
 import style from './ingredient-page.module.css';
-import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
+import { useEffect } from "react";
+import { getFeed } from "../../services/actions/ingredientsAction";
 
 export const IngredientPage = () => {
 
-    // const ingredients = useSelector(state => state.ingredients.ingredients.data)
-    // const {ingredientId} = useParams();
-    // const data = ingredients.find(item => item._id === ingredientId)
+    const ingredients = useSelector(state => state.ingredients.ingredients.data)
+    const location = useLocation()
+    const { feedRequest, feedFailed } = useSelector(state => state.ingredients)
+    const dispatch = useDispatch();
 
-    const data = useSelector(state => state.ingredient.ingredientData)
+    useEffect(() => {
+        dispatch(getFeed())
+    }, [])
 
-    if (!data) return <div>Ингридиент не найден</div>;
+    if (feedRequest) {
+        return  <h4>Загрузка компонентов</h4>
+    } else if (feedFailed) {
+        return <h5>Ошибка загрузки</h5>
+    }
+
+    const ingredientId = location.pathname.slice(13)
+    const data = ingredients.find(item => item._id === ingredientId)
 
     return (
         <section className={style.ingredientPage}>

@@ -1,27 +1,48 @@
-import { changeDataUser, checkResponse, getAuthorization, postLogOut } from "../../utils/burger-api";
+import {
+    checkResponse,
+    fetchWithRefresh, postLoginUser,
+    postLogOut
+} from "../../utils/burger-api";
 
-export const registrationUserData = data => dispatch => {
+export const getLoginData = data => dispatch => {
     dispatch(getUserDataInitial());
-    getAuthorization(data)
+    postLoginUser(data)
         .then(checkResponse)
-        .then(res => dispatch(getUserSuccess(res)))
+        .then(res => {
+            localStorage.setItem("accessToken", res.accessToken);
+            localStorage.setItem("refreshToken", res.refreshToken);
+            dispatch(getUserSuccess(res))
+        })
         .catch(err => dispatch(getUserDataFailed()))
 }
-
-
-export const changeUserData = data => dispatch => {
-    changeDataUser(data)
-        .then(checkResponse)
-        .then(res => dispatch(changeUser(res)))
-        .catch(err => console.log(err))
-}
-
 
 export const postLogOutUser = data => dispatch => {
     postLogOut(data)
         .then(checkResponse)
-        .then(res => dispatch(logOutUser()))
+        .then(res => {
+            localStorage.removeItem("accessToken");
+            localStorage.removeItem("refreshToken");
+            dispatch(logOutUser())
+        })
         .catch(err => console.log(err))
+}
+
+export const checkUserAuth = () => {
+    return (dispatch) => {
+        if (localStorage.getItem("accessToken")) {
+            fetchWithRefresh(localStorage.getItem("accessToken"))
+                .then(res => dispatch(getUserSuccess(res)))
+                .catch(err => dispatch(getUserDataFailed()))
+        }
+    };
+};
+
+export const changeUserData = (method, endpoint) => dispatch => {
+    if (localStorage.getItem("accessToken")) {
+        fetchWithRefresh(localStorage.getItem("accessToken"), method, endpoint )
+            .then(res => dispatch(changeUser(res)))
+            .catch(err => console.log(err))
+    }
 }
 
 export const getUserDataInitial = () => {
@@ -40,13 +61,6 @@ export const getUserSuccess = (user) => {
 export const getUserDataFailed = () => {
     return {
         type: 'POST_AUTHORIZATION_FAILED'
-    }
-}
-
-export const setUserDataLocalStorage = (data) => {
-    return {
-        type: 'SET_USERDATA_LOCALSTORAGE',
-        payload: data
     }
 }
 

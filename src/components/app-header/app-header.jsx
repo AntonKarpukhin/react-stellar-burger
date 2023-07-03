@@ -5,10 +5,10 @@ import { useSelector } from "react-redux";
 
 const AppHeader = () => {
 
-    const user = useSelector(state => state.userReducer);
+    const isAuthChecked = useSelector(state => state.userReducer.isAuthenticated);
 
     const checkUser = () => {
-        if (user) {
+        if (isAuthChecked) {
             return '/profile'
         }
         return '/login'

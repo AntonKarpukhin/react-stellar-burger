@@ -1,9 +1,9 @@
 import style from './entrance.module.css';
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button, EmailInput, PasswordInput } from "@ya.praktikum/react-developer-burger-ui-components";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { registrationUserData } from "../../services/actions/userAction";
+import { getLoginData } from "../../services/actions/userAction";
 
 export const Entrance = () => {
 
@@ -14,10 +14,6 @@ export const Entrance = () => {
     const dispatch = useDispatch();
 
     const navigate = useNavigate();
-
-    useEffect(() => {
-        if (user.isAuthenticated) navigate('/profile')
-    }, [user.isAuthenticated])
 
     const onChangeEmail = e => {
         setEmailValue(e.target.value)
@@ -32,7 +28,7 @@ export const Entrance = () => {
             email: emailValue,
             password: passwordValue
         }
-        dispatch(registrationUserData(data))
+        dispatch(getLoginData( data))
         if (user.isAuthenticated) navigate('/');
     }
 

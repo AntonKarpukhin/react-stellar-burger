@@ -7,7 +7,16 @@ import { useParams } from "react-router-dom";
 
 const IngredientDetails = () => {
 
-    const data = useSelector(state => state.ingredient.ingredientData)
+    const ingredients = useSelector(state => state.ingredients.ingredients.data)
+    const {ingredientId} = useParams();
+
+    let data;
+
+    if (!ingredients) {
+        data = []
+    } else {
+        data = ingredients.find(item => item._id === ingredientId)
+    }
 
     return (
             <Fragment>

@@ -1,19 +1,15 @@
 import style from './modal.module.css'
-
 import ReactDOM from "react-dom";
 import { useEffect } from "react";
 import PropTypes from "prop-types";
 import ModalOverlay from "../modal-overlay/modal-overlay";
 import { CloseIcon } from "@ya.praktikum/react-developer-burger-ui-components";
-import { useNavigate, useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
 
 const modalRoot = document.getElementById("react-modals");
 
 const Modal = (props) => {
 
     const { closeModal } = props;
-
 
     useEffect(() => {
 

@@ -1,22 +1,17 @@
 import style from './burger-ingredients.module.css';
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
-import Modal from "../modal/modal";
-import IngredientDetails from "../ingredient-details/ingredient-details";
 import Ingredient from "../ingredient/ingredient";
 import { useSelector, useDispatch } from "react-redux";
 import { getFeed } from "../../services/actions/ingredientsAction";
-import { openIngredient, removeIngredient } from "../../services/actions/ingredientAction";
-import { Link, useLocation } from "react-router-dom";
 
-const BurgerIngredients = (props) => {
+const BurgerIngredients = () => {
 
     const ingredients = useSelector(state => state.ingredients.ingredients.data)
     const { feedRequest, feedFailed } = useSelector(state => state.ingredients)
 
     const dispatch = useDispatch();
 
-    const {openModal} = props
 
     const [current, setCurrent] = useState('one');
 
@@ -24,7 +19,6 @@ const BurgerIngredients = (props) => {
     const refSauce = useRef(null);
     const refMain = useRef(null);
 
-    let location = useLocation();
 
     useEffect(() => {
         dispatch(getFeed())
@@ -43,7 +37,6 @@ const BurgerIngredients = (props) => {
             setCurrent("three");
         }
     };
-
 
     const changeCurrentAndScroll = (e, ref) => {
         setCurrent(() =>  e);
@@ -88,23 +81,22 @@ const BurgerIngredients = (props) => {
                 <div ref={refBun}   className="pt-10" >
                     <p className="text text_type_main-medium">Булки</p>
                     <div className={`${style.wrapperItem} pt-6 pl-4`}>
-                        {bun.map(item => <Link to={{pathname: `/ingredient/${item._id}`, state: { background: location }}}  key={item._id}> <Ingredient openModal={openModal} item={item}/>) </Link>) }
+                        {bun.map(item =>  <Ingredient key={item._id} item={item}/>) }
                     </div>
                 </div>
                 <div ref={refMain} className="pt-10" >
                     <p className="text text_type_main-medium">Соусы</p>
                     <div className={`${style.wrapperItem} pt-6 pl-4`}>
-                        {main.map(item => <Link to={{pathname: `/ingredient/${item._id}`, state: { background: location }}}  key={item._id}> <Ingredient openModal={openModal} item={item}/>) </Link>)}
+                        {main.map(item =>  <Ingredient  key={item._id} item={item}/>)}
                     </div>
                 </div>
                 <div ref={refSauce}  className="pt-10" >
                     <p className="text text_type_main-medium">Начинки</p>
                     <div className={`${style.wrapperItem} pt-6 pl-4`}>
-                        {sauce.map(item => <Link to={{pathname: `/ingredient/${item._id}`, state: { background: location }}}  key={item._id}> <Ingredient openModal={openModal} item={item}/>) </Link> )}
+                        {sauce.map(item =>  <Ingredient key={item._id} item={item}/>)}
                     </div>
                 </div>
             </div>
-            {/*{modal && <Modal closeModal={closeModal}><IngredientDetails /></Modal>}*/}
         </section>
     )
 }

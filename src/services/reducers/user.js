@@ -4,8 +4,6 @@ const initialState = {
     isAuthenticated: false,
     name: '',
     login: '',
-    accessToken: '',
-    refreshToken: ''
 }
 
 const userReducer = (state = initialState, action) => {
@@ -17,18 +15,13 @@ const userReducer = (state = initialState, action) => {
                 feedFailed: false
             }
         case "POST_AUTHORIZATION_SUCCESS":
-
-            localStorage.setItem('user', JSON.stringify(action.payload));
-            const {accessToken, refreshToken, user} = JSON.parse(localStorage.getItem('user'));
             return {
                 ...state,
                 feedRequest: false,
                 feedFailed: false,
                 isAuthenticated: true,
-                name: user.name,
-                login: user.email,
-                accessToken,
-                refreshToken
+                name: action.payload.user.name,
+                login: action.payload.user.email
             }
         case "POST_AUTHORIZATION_FAILED":
             return {
@@ -37,46 +30,22 @@ const userReducer = (state = initialState, action) => {
                 feedFailed: true,
                 isAuthenticated: false,
                 name: '',
-                login: '',
-                accessToken: '',
-                refreshToken: ''
-            }
-        case "SET_USERDATA_LOCALSTORAGE":
-            return {
-                ...state,
-                feedRequest: false,
-                feedFailed: false,
-                isAuthenticated: true,
-                name: action.payload.user.name,
-                login: action.payload.user.email,
-                accessToken: action.payload.accessToken,
-                refreshToken: action.payload.refreshToken
+                login: ''
             }
         case "CHANGE_USER_UPDATE":
-            const oldUser = JSON.parse(localStorage.getItem('user'));
-            const newUser = {...oldUser, user: action.payload.user}
-            localStorage.setItem('user', JSON.stringify(newUser));
             return {
                 ...state,
-                feedRequest: false,
-                feedFailed: false,
-                isAuthenticated: true,
-                name: newUser.user.name,
-                login: newUser.user.email,
-                accessToken: newUser.accessToken,
-                refreshToken: newUser.refreshToken
+                name: action.payload.user.name,
+                login: action.payload.user.email,
             }
         case "LOG_OUT_USER":
-            localStorage.removeItem('user');
             return {
                 ...state,
                 feedRequest: false,
                 feedFailed: false,
                 isAuthenticated: false,
                 name: '',
-                login: '',
-                accessToken: '',
-                refreshToken: ''
+                login: ''
             }
         default: {
             return state

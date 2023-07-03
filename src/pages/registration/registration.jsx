@@ -1,9 +1,8 @@
 import style from './registration.module.css';
 import { Button, EmailInput, Input, PasswordInput } from "@ya.praktikum/react-developer-burger-ui-components";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { checkResponse, postRegistration } from "../../utils/burger-api";
-import { useSelector } from "react-redux";
 
 export const Registration = () => {
 
@@ -11,13 +10,7 @@ export const Registration = () => {
     const [passwordValue, setPasswordValue] = useState('')
     const [nameValue, setNameValue] = useState('')
 
-    const user = useSelector(state => state.userReducer);
-
     const navigate = useNavigate();
-
-    useEffect(() => {
-        if (user.isAuthenticated) navigate('/')
-    },[])
 
     const onChangeEmail = e => {
         setEmailValue(e.target.value)

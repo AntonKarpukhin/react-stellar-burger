@@ -1,7 +1,7 @@
 import style from './profile.module.css';
 import { Button, EmailInput, Input, PasswordInput } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useEffect, useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { changeUserData, postLogOutUser } from "../../services/actions/userAction";
 
@@ -14,10 +14,8 @@ export const Profile = () => {
     const user = useSelector(state => state.userReducer);
 
     const dispatch = useDispatch();
-    const navigate = useNavigate();
 
     useEffect(() => {
-        if (!user.isAuthenticated) navigate("/login")
         if (user.isAuthenticated) {
             setEmailValue(user.login);
             setNameValue(user.name);
@@ -34,7 +32,7 @@ export const Profile = () => {
     }
 
     const onLogOut = () => {
-        dispatch(postLogOutUser(user.refreshToken))
+        dispatch(postLogOutUser(localStorage.getItem("refreshToken")))
     }
 
     const onCancel = () => {
@@ -43,13 +41,12 @@ export const Profile = () => {
         setPasswordValue('');
     }
 
-    const abv = () => {
+    const changeUser = () => {
         const data = {
-            token: user.accessToken,
             email: emailValue,
             name: nameValue
         }
-        dispatch(changeUserData(data))
+        dispatch(changeUserData('PATCH', data))
     }
 
     return (
@@ -107,7 +104,7 @@ export const Profile = () => {
                         placeholder={'Пароль'}
                     />
                     <div className={style.wrapperButton}>
-                        <Button onClick={abv} htmlType="submit" type="primary" size="medium">
+                        <Button onClick={changeUser} htmlType="submit" type="primary" size="medium">
                             Сохранить
                         </Button>
                         <Button onClick={onCancel} htmlType="submit" type="primary" size="medium">
