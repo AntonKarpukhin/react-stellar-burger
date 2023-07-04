@@ -13,6 +13,8 @@
 
 .header__container {
 	composes: header__navigation;
+	text-decoration: none;
+	color: white;
 }
 
 .header__container:hover {
@@ -20,3 +22,12 @@
 	opacity: 0.7;
 }
 
+.link {
+	text-decoration: none;
+	color: white;
+}
+
+.linkActive {
+	color: blueviolet;
+	text-decoration: none;
+}

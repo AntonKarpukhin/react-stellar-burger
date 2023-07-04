@@ -2,7 +2,7 @@ const initialState = {
     ingredientData: {}
 }
 
-const ingredient = (state = initialState, action) => {
+const ingredientReducer = (state = initialState, action) => {
     switch ( action.type ) {
         case "OPEN_INGREDIENT":
             return {
@@ -21,4 +21,4 @@ const ingredient = (state = initialState, action) => {
 }
 
 
-export default ingredient;
+export default ingredientReducer;

@@ -6,6 +6,8 @@
 	align-items: center;
 	position: relative;
 	cursor: pointer;
+	text-decoration: none;
+	color: white;
 }
 
 .item:hover {

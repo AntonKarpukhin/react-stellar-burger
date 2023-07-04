@@ -1,5 +1,4 @@
 import style from './modal.module.css'
-
 import ReactDOM from "react-dom";
 import { useEffect } from "react";
 import PropTypes from "prop-types";

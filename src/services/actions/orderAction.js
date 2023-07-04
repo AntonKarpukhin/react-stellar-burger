@@ -16,10 +16,10 @@ export const postOrdered = () => {
     }
 }
 
-export const postOrderSuccess = (heroes) => {
+export const postOrderSuccess = (ingredient) => {
     return {
         type: 'POST_ORDER_SUCCESS',
-        payload: heroes
+        payload: ingredient
     }
 }
 

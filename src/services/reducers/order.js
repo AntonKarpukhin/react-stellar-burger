@@ -44,5 +44,4 @@ const order = (state = initialState, action) => {
     }
 }
 
-
 export default order;

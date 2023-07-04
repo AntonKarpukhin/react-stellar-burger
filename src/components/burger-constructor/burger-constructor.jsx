@@ -8,18 +8,21 @@ import { useMemo, useState } from "react";
 import Modal from "../modal/modal";
 import OrderDetails from "../order-details/order-details";
 import { useDispatch, useSelector } from "react-redux";
-import { addIngredientId, postFeed, removeOrderId } from "../../services/actions/order";
-import { addIngredient, deleteIngredient } from "../../services/actions/constructorBurger";
+import { addIngredientId, postFeed, removeOrderId } from "../../services/actions/orderAction";
+import { addIngredient, deleteIngredient } from "../../services/actions/constructorBurgerAction";
 import { useDrop } from "react-dnd";
 import IngredientConstructor from "../ingredient-constructor/ingredient-constructor";
+import { useNavigate } from "react-router-dom";
 
 const BurgerConstructor = () => {
 
     const bun = useSelector(state => state.constructorBurger.bun)
     const ingredients = useSelector(state => state.constructorBurger.ingredients)
     const { ingredientsID } = useSelector(state => state.order)
+    const user = useSelector(state => state.userReducer);
     const [modal, setModal] = useState(false);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const [{isHover}, dropTarget] = useDrop({
         accept: 'ingredient',
@@ -44,6 +47,7 @@ const BurgerConstructor = () => {
     }, [ingredients, bun])
 
     const openModal = () => {
+        if (!user.isAuthenticated) navigate('/login')
         dispatch(postFeed(ingredientsID));
         setModal(true);
     }
