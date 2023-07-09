@@ -30,9 +30,7 @@ import {
 import { ProfileInfo } from "../profile-info/profile-info";
 import { ProfileFeed } from "../profile-feed/profile-feed";
 import { OneOrder } from "../one-order/one-order";
-import {  WS_ORDER_FEED_CONNECT } from "../../services/actions/order-feed-action";
 import { getFeed } from "../../services/actions/ingredientsAction";
-import { WS_USER_FEED_CONNECT } from "../../services/actions/user-feed-action";
 
 function App() {
 
@@ -40,8 +38,6 @@ function App() {
 
     useEffect(() => {
         dispatch(checkUserAuth());
-        dispatch({type: WS_ORDER_FEED_CONNECT})
-        dispatch({type: WS_USER_FEED_CONNECT})
         dispatch(getFeed())
     }, []);
 
@@ -49,7 +45,6 @@ function App() {
     const navigate = useNavigate();
 
     const background = location.state && location.state.background;
-    const backgroundTwo = location.state && location.state.backgroundTwo;
 
     const handleModalClose = () => {
         navigate(-1);
@@ -85,12 +80,16 @@ function App() {
                             </Modal>
                         }
                     />
-                </Routes>
-            )}
-            {backgroundTwo && (
-                <Routes>
                     <Route
                         path={`${routeOrderFeed}${routeOrderFeedId}`}
+                        element={
+                            <Modal closeModal={handleModalClose}>
+                                <OneOrder />
+                            </Modal>
+                        }
+                    />
+                    <Route
+                        path={`${routeUser}/${routeProfileFeed}${routeOrderFeedId}`}
                         element={
                             <Modal closeModal={handleModalClose}>
                                 <OneOrder />

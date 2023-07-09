@@ -3,7 +3,6 @@ import style from './order.module.css'
 import { CurrencyIcon, FormattedDate } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
-import { routeOrderFeed } from "../../utils/data";
 
 export const Order = (props) => {
 
@@ -40,10 +39,8 @@ export const Order = (props) => {
         return null
     }
 
-
-
     return (
-        <Link to={`${routeOrderFeed}/${numberId}`} state={{ backgroundTwo: location }} className={style.link}>
+        <Link to={`${location.pathname}/${numberId}`} state={{ background: location }} className={style.link}>
             <div className={style.wrapperOrder}>
                 <div className={style.wrapperDate}>
                     <p className="text text_type_digits-default">{`#${number}`}</p>

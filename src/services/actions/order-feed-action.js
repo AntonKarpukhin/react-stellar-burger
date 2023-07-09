@@ -6,3 +6,11 @@ export const WS_ORDER_FEED_CLOSE = 'WS_ORDER_FEED_CLOSE';
 export const WS_ORDER_FEED_MESSAGE = 'WS_ORDER_FEED_MESSAGE';
 export const WS_ORDER_FEED_ERROR = 'WS_ORDER_FEED_ERROR';
 
+export const connect = (url) => ({
+    type: WS_ORDER_FEED_CONNECT,
+    payload: url
+});
+
+export const disconnect = () => ({
+    type: WS_ORDER_FEED_DISCONNECT,
+});

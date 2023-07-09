@@ -6,9 +6,8 @@ import order from "../reducers/order";
 import ingredient from "../reducers/ingredient";
 import userReducer from '../reducers/user'
 import orderFeedReducer  from "../reducers/order-feed-reducer";
-import  orderFeedMiddleware from '../middleware/order-feed-middleware';
 import userFeedReducer from "../reducers/user-feed-reducer";
-import userFeedMiddleware from '../middleware/user-feed-middleware';
+import socketFeedMiddleware from '../middleware/socket-feed-middleware';
 
 import {
     WS_ORDER_FEED_CONNECT,
@@ -19,7 +18,6 @@ import {
     WS_ORDER_FEED_MESSAGE,
     WS_ORDER_FEED_CLOSE
 } from '../actions/order-feed-action'
-import { wsUrlFeed } from "../../utils/data";
 import {
     WS_USER_FEED_CLOSE,
     WS_USER_FEED_CONNECT,
@@ -53,8 +51,8 @@ const userFeedStatus = {
 const rootReducer = createStore(
     combineReducers({ ingredients, constructorBurger, ingredient, order, userReducer, orderFeedReducer, userFeedReducer }),
     compose(applyMiddleware(ReduxThunk),
-        applyMiddleware(orderFeedMiddleware(wsUrlFeed, orderFeedStatus)),
-        applyMiddleware(userFeedMiddleware(userFeedStatus)),
+        applyMiddleware(socketFeedMiddleware(userFeedStatus)),
+        applyMiddleware(socketFeedMiddleware(orderFeedStatus)),
         window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()));
 
 export default rootReducer;

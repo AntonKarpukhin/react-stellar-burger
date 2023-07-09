@@ -36,6 +36,20 @@ export const OneOrder = () => {
         return a
     }, 0)
 
+    const checkTotalIngredient = (ingredients, order) => {
+
+        const duplicates = order.ingredients.filter((number, index, numbers) => {
+            return numbers.indexOf(number) !== index;
+        });
+
+        const counter = order.ingredients.filter(item => item === duplicates[0]).length
+
+        const notDuplicates = order.ingredients.filter(item => item !== duplicates[0]).map(item => ({item, total: 1}))
+
+        const newIngredients =  [{item: duplicates[0], total: counter}]
+
+        return [ ...notDuplicates, ...newIngredients ]
+    }
 
     return (
         <section className={style.oneOrder}>
@@ -44,20 +58,7 @@ export const OneOrder = () => {
             <p className={`${style.good} text text_type_main-small text_color_inactive`}>{orders && checkStatus(data.status)}</p>
             <p className={`${style.brom} text text_type_main-medium`}>Состав:</p>
             <div className={`${style.wrapper} custom-scroll`}>
-                {orders && data.ingredients.map((item, i) => <IngredientSmall key={i} item={item}/>)}
-                {/*{data && data.ingredients.map((item, i) => {*/}
-                {/*    console.log(item)*/}
-                {/*    return (*/}
-                {/*        <div key={i} className={style.wrapper1}>*/}
-                {/*            <img className={style.img} src={item.image} alt={item.name}/>*/}
-                {/*            <p className="text text_type_main-default">{item.name}</p>*/}
-                {/*            <div className={style.wrapperPrice1}>*/}
-                {/*                <p className="text text_type_digits-default"><span>{item.total}</span>   x   <span>{item.price}</span></p>*/}
-                {/*                <CurrencyIcon type="primary" />*/}
-                {/*            </div>*/}
-                {/*        </div>*/}
-                {/*    )*/}
-                {/*})}*/}
+                {orders && ingredientsData && data && checkTotalIngredient(ingredientsData, data).map((item, i) => <IngredientSmall key={i} item={item}/>)}
             </div>
             <div className={style.wrapperPrice}>
                 <p className="text text_type_main-default text_color_inactive">

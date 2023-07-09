@@ -1,11 +1,33 @@
 import style from './order-feed.module.css';
 import { Order } from "../../components/order/order";
-import { useSelector } from "react-redux";
-
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import {connect as connectFeedTable, disconnect as disconnectFeedTable} from '../../services/actions/order-feed-action';
+import { wsUrlFeed } from "../../utils/data";
 
 export const OrderFeed = () => {
 
     const {orders, total, totalToday} = useSelector(state => state.orderFeedReducer.orders);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(connectFeedTable(wsUrlFeed))
+        return () => {
+            dispatch(disconnectFeedTable())
+        }
+    },[])
+
+    const done = orders && orders.map(item => {
+        if (item.status === 'done') {
+            return item.number
+        }
+    }).slice(0, 7);
+
+    const work = orders && orders.map(item => {
+        if (item.status === 'work') {
+            return item.number
+        }
+    }).slice(0, 7);
 
     return (
         <section className={style.section}>
@@ -19,17 +41,13 @@ export const OrderFeed = () => {
                         <div>
                             <p className="text text_type_main-medium">Готовы:</p>
                             <div className={style.wrapperNumber}>
-                                {/*<p className="text text_type_digits-default text_color_inactive">123456</p>*/}
-                                {/*<p className="text text_type_digits-default text_color_inactive">12345</p>*/}
-                                {/*<p className="text text_type_digits-default text_color_inactive">1234567</p>*/}
+                                {orders && done && done.map(item => <p key={item} className="text text_type_digits-default text_color_inactive">{item}</p>)}
                             </div>
                         </div>
                         <div>
                             <p className="text text_type_main-medium">В работе:</p>
                             <div className={style.wrapperNumber}>
-                                {/*<p className="text text_type_digits-default">123456</p>*/}
-                                {/*<p className="text text_type_digits-default">12345</p>*/}
-
+                                {orders && work && work.map((item, i) => <p key={i} className="text text_type_digits-default text_color_inactive">{item}</p>)}
                             </div>
                         </div>
                     </div>

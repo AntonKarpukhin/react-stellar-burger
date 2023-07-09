@@ -81,7 +81,6 @@
 	right: 0;
 	bottom: 0;
 	background: rgba(0,0,0,.5);
-	z-index: 2;
 	border-radius: 50%;
 }
 
@@ -90,5 +89,4 @@
 	padding: 0;
 	opacity: 5;
 	font-size: 24px;
-	z-index: 3;
 }

@@ -1,4 +1,4 @@
-const orderFeedMiddleware = (wsUrl, wsActions) => {
+const socketFeedMiddleware = (wsActions) => {
     return store => {
         let socket = null;
 
@@ -16,7 +16,7 @@ const orderFeedMiddleware = (wsUrl, wsActions) => {
             } = wsActions;
 
             if (type === wsConnect) {
-                socket = new WebSocket(wsUrl);
+                socket = new WebSocket(action.payload);
                 dispatch({type: wsConnecting});
             }
 
@@ -45,4 +45,4 @@ const orderFeedMiddleware = (wsUrl, wsActions) => {
     };
 };
 
-export default orderFeedMiddleware;
+export default socketFeedMiddleware;

@@ -2,10 +2,10 @@ import { checkResponse, postOrder } from "../../utils/burger-api";
 
 export const postFeed = (data) => (dispatch) => {
     dispatch(postOrdered());
-    const accessToken = localStorage.getItem('accessToken').slice(7);
+    const accessToken = localStorage.getItem('accessToken');
     postOrder(data, accessToken)
         .then(checkResponse)
-        .then(res => {dispatch(postOrderSuccess(res.order.number))})
+        .then(res => dispatch(postOrderSuccess(res.order.number)))
         .catch(err => dispatch(postOrderFailed()))
 }
 

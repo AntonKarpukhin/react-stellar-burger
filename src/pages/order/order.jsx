@@ -1,8 +1,13 @@
 import style from './order.module.css';
 import { IngredientSmall } from "../../components/ingredient-small/ingredient-small";
 import { CurrencyIcon, FormattedDate } from "@ya.praktikum/react-developer-burger-ui-components";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
+import { useEffect, useMemo } from "react";
+import {
+    connect as connectFeedTable, disconnect as disconnectFeedTable
+} from "../../services/actions/order-feed-action";
+import { wsUrlFeed } from "../../utils/data";
 
 export const Order = () => {
 
@@ -13,14 +18,25 @@ export const Order = () => {
     const ingredientId = location.pathname.slice(6)
     const order = orders && orders.find(item => item.number === +ingredientId)
 
-    const total = order && ingredientsData && order.ingredients.reduce((a, b) => {
-        ingredientsData && ingredientsData.forEach(item => {
-            if (item._id=== b) {
-                a += item.price
-            }
-        })
-        return a
-    }, 0)
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(connectFeedTable(wsUrlFeed))
+        return () => {
+            dispatch(disconnectFeedTable())
+        }
+    },[])
+
+    const total = useMemo(() => {
+        order && ingredientsData && order.ingredients.reduce((a, b) => {
+            ingredientsData && ingredientsData.forEach(item => {
+                if (item._id=== b) {
+                    a += item.price
+                }
+            })
+            return a
+        }, 0)
+    }, [order, ingredientsData])
 
     const checkStatus = (type) => {
         switch ( type ) {
@@ -32,17 +48,18 @@ export const Order = () => {
     }
 
     const checkTotalIngredient = (ingredients, order) => {
+
         const duplicates = order.ingredients.filter((number, index, numbers) => {
             return numbers.indexOf(number) !== index;
         });
 
-        const notDuplicates = order.ingredients.filter((number, index, numbers) => {
-            return numbers.indexOf(number) === index;
-        }).map(item => ({item, total: 1}))
+        const counter = order.ingredients.filter(item => item === duplicates[0]).length
 
-        const newIngredients =  [{item: duplicates[0], total: duplicates.length}]
+        const notDuplicates = order.ingredients.filter(item => item !== duplicates[0]).map(item => ({item, total: 1}))
 
-        return[ ...notDuplicates, ...newIngredients ]
+        const newIngredients =  [{item: duplicates[0], total: counter}]
+
+        return [ ...notDuplicates, ...newIngredients ]
     }
 
     const lengthIngredient = ingredientsData && order && checkTotalIngredient(ingredientsData, order).length
