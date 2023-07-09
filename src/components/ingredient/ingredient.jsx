@@ -18,7 +18,6 @@ const Ingredient = (props) => {
     const location = useLocation();
     const ingredientId = item['_id'];
 
-
     const [, dragRef] = useDrag({
         type: 'ingredient',
         item: newItem,

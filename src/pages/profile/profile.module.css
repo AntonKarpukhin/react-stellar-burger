@@ -11,16 +11,9 @@
 }
 
 .wrapper {
-	display: flex;
-	gap: 60px;
+	display: grid;
+	grid-template-columns: repeat(2, 620px);
 	margin: 0 auto;
-	align-items: center;
-}
-
-.wrapperInput {
-	display: flex;
-	flex-direction: column;
-	gap: 24px;
 	align-items: center;
 }
 
@@ -56,9 +49,4 @@
 	height: 64px;
 	width: 320px;
 	padding-top: 80px;
-}
-
-.wrapperButton {
-	display: flex;
-	gap: 15px;
 }

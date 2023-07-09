@@ -1,14 +1,10 @@
 import style from './profile.module.css';
-import { Button, EmailInput, Input, PasswordInput } from "@ya.praktikum/react-developer-burger-ui-components";
-import { NavLink } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { changeUserData, postLogOutUser } from "../../services/actions/userAction";
-import { useForm } from "../../hooks/useForm";
+import { NavLink, Outlet  } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { postLogOutUser } from "../../services/actions/userAction";
+import { routeProfile, routeProfileFeed, routeUser } from "../../utils/data";
 
 export const Profile = () => {
-
-    const user = useSelector(state => state.userReducer);
-    const {values, handleChange, setValues} = useForm({name: user.name, email: user.login, password: ''});
 
     const dispatch = useDispatch();
 
@@ -16,29 +12,24 @@ export const Profile = () => {
         dispatch(postLogOutUser(localStorage.getItem("refreshToken")))
     }
 
-    const onCancel = () => {
-        setValues(value => ({ ...value, name: user.name, email: user.login, password: '' }))
-    }
-
-    const changeUser = (e) => {
-        e.preventDefault();
-        dispatch(changeUserData('PATCH', values))
-    }
+    const clazz = (navData) => (navData.isActive ? `${style.li} ${style.liActive}` : `${style.li}`);
 
     return (
         <section className={style.profile}>
             <div className={style.wrapper}>
                 <div>
                     <nav className={style.nav}>
-                        <NavLink to='/profile' className={(navData) => (navData.isActive ? `${style.li} ${style.liActive}` : `${style.li}`)}>
+                        <NavLink to={routeProfile} className={clazz}>
                             <p className="text text_type_main-medium">
                                 Профиль
                             </p>
                         </NavLink>
                         <li className={style.li}>
-                            <p className="text text_type_main-medium">
-                                История заказов
-                            </p>
+                            <NavLink to={routeProfileFeed} className={clazz}>
+                                <p className="text text_type_main-medium">
+                                    История заказов
+                                </p>
+                            </NavLink>
                         </li>
                         <li className={style.li}>
                             <p onClick={onLogOut} className={`${style.button} text text_type_main-medium`}>
@@ -51,43 +42,7 @@ export const Profile = () => {
                         изменить свои персональные данные
                     </p>
                 </div>
-                <form onSubmit={changeUser} className={style.wrapperInput}>
-                    <Input
-                        type={'text'}
-                        placeholder={'Имя'}
-                        onChange={handleChange}
-                        value={values.name}
-                        name={'name'}
-                        error={false}
-                        errorText={'Ошибка'}
-                        size={'default'}
-                        extraClass="ml-1"
-                        icon={"EditIcon"}
-                    />
-                    <EmailInput
-                        onChange={handleChange}
-                        value={values.email}
-                        name={'email'}
-                        isIcon={false}
-                        icon={"EditIcon"}
-                        placeholder={'Логин'}
-                    />
-                    <PasswordInput
-                        onChange={handleChange}
-                        value={values.password}
-                        name={'password'}
-                        extraClass="mb-2"
-                        placeholder={'Пароль'}
-                    />
-                    <div className={style.wrapperButton}>
-                        <Button htmlType="submit" type="primary" size="medium">
-                            Сохранить
-                        </Button>
-                        <Button onClick={onCancel} htmlType="reset" type="primary" size="medium">
-                            Отменить
-                        </Button>
-                    </div>
-                </form>
+                <Outlet />
             </div>
         </section>
     )

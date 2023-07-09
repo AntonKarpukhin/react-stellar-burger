@@ -2,7 +2,7 @@ import style from './app-header.module.css';
 import { Link, NavLink } from 'react-router-dom';
 import { Logo, ProfileIcon, BurgerIcon, ListIcon, } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useSelector } from "react-redux";
-import { routeLogin, routeMain, routeProfile } from "../../utils/data";
+import { routeLogin, routeMain, routeOrderFeed, routeProfile, routeUser } from "../../utils/data";
 
 const AppHeader = () => {
 
@@ -10,22 +10,24 @@ const AppHeader = () => {
 
     const checkUser = () => {
         if (isAuthChecked) {
-            return routeProfile
+            return `${routeUser}/${routeProfile}`
         }
         return routeLogin
     }
+
+    const clazz = ({ isActive }) => isActive ? `${style.linkActive} text text_type_main-default ml-2` : `${style.link} text text_type_main-default ml-2`;
 
     return (
         <header className={style.header}>
             <nav className={style.header__navigation}>
                 <div className={style.header__container}>
                     <BurgerIcon type="primary"/>
-                    <NavLink to={routeMain} className={({ isActive }) => isActive ? `${style.linkActive} text text_type_main-default ml-2` : `${style.link} text text_type_main-default ml-2` } >Конструктор
+                    <NavLink to={routeMain} className={clazz} >Конструктор
                     </NavLink>
                 </div>
                 <div className={`${style.header__container} ml-2`}>
                     <ListIcon type="secondary"/>
-                    <p className="text text_type_main-default ml-2">Лента заказов</p>
+                    <NavLink to={routeOrderFeed} className={({ isActive }) => isActive ? `${style.linkActive} text text_type_main-default ml-2` : `${style.link} text text_type_main-default ml-2` }>Лента заказов</NavLink>
                 </div>
             </nav>
             <Link to={routeMain}>

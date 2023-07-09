@@ -5,7 +5,7 @@ import { checkResponse, postRegistration } from "../../utils/burger-api";
 import { useForm } from "../../hooks/useForm";
 import { useDispatch } from "react-redux";
 import { checkUserAuth } from "../../services/actions/userAction";
-import { routeLogin, routeProfile } from "../../utils/data";
+import { routeLogin, routeUser} from "../../utils/data";
 
 export const Registration = () => {
 
@@ -24,7 +24,7 @@ export const Registration = () => {
                 localStorage.setItem("accessToken", res.accessToken);
                 localStorage.setItem("refreshToken", res.refreshToken);
                 dispatch(checkUserAuth())
-                navigate(routeProfile)
+                navigate(routeUser)
             })
             .catch(err => console.log(err))
     }

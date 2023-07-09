@@ -1,0 +1,11 @@
+.itemsFeed {
+	overflow: scroll;
+	height: 756px;
+	overflow-x: hidden;
+	scroll-behavior: smooth;
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	padding-right: 8px;
+	margin-top: 20px;
+}
