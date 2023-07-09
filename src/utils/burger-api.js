@@ -124,4 +124,9 @@ function saveNewPassword(data) {
     })
 }
 
-export {checkResponse, postOrder, initialData, resetPassword, saveNewPassword, postRegistration, postLogOut, fetchWithRefresh,  postLoginUser}
+function getOrder(order) {
+    return  fetch(`${dataUrl}/orders/${order}`)
+}
+
+
+export {checkResponse, postOrder, initialData, resetPassword, saveNewPassword, postRegistration, postLogOut, fetchWithRefresh,  postLoginUser, getOrder}

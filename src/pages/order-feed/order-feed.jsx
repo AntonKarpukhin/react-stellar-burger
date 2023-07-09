@@ -23,8 +23,8 @@ export const OrderFeed = () => {
         }
     }).slice(0, 7);
 
-    const work = orders && orders.map(item => {
-        if (item.status === 'work') {
+    const pending = orders && orders.map(item => {
+        if (item.status === 'pending') {
             return item.number
         }
     }).slice(0, 7);
@@ -41,13 +41,13 @@ export const OrderFeed = () => {
                         <div>
                             <p className="text text_type_main-medium">Готовы:</p>
                             <div className={style.wrapperNumber}>
-                                {orders && done && done.map(item => <p key={item} className="text text_type_digits-default text_color_inactive">{item}</p>)}
+                                {orders && done && done.map((item, i) => <p key={i} className="text text_type_digits-default text_color_inactive">{item}</p>)}
                             </div>
                         </div>
                         <div>
                             <p className="text text_type_main-medium">В работе:</p>
                             <div className={style.wrapperNumber}>
-                                {orders && work && work.map((item, i) => <p key={i} className="text text_type_digits-default text_color_inactive">{item}</p>)}
+                                {orders && pending && pending.map((item, i) => <p key={i} className="text text_type_digits-default text_color_inactive">{item}</p>)}
                             </div>
                         </div>
                     </div>

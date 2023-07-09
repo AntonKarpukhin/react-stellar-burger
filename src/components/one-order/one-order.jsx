@@ -1,22 +1,27 @@
 import style from './one-order.module.css';
 import { CurrencyIcon, FormattedDate } from "@ya.praktikum/react-developer-burger-ui-components";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { IngredientSmall } from "../ingredient-small/ingredient-small";
 import { useParams } from "react-router-dom";
+import { useEffect } from "react";
+import { getIngredient, removeIngredient } from "../../services/actions/ingredientAction";
 
 export const OneOrder = () => {
 
-    const orders = useSelector(state => state.orderFeedReducer.orders.orders);
     const ingredientsData = useSelector(state => state.ingredients.ingredients.data)
+    const ingredient = useSelector(state => state.ingredient.ingredientData.orders)
     const {orderId} = useParams();
 
-    let data;
+    const dispatch = useDispatch();
 
-    if (!orders) {
-        data = []
-    } else {
-        data = orders.find(item => item.number === +orderId)
-    }
+
+    useEffect(() => {
+        dispatch(getIngredient(orderId))
+
+        return () => {
+            dispatch(removeIngredient)
+        }
+    }, [])
 
     const checkStatus = (type) => {
         switch ( type ) {
@@ -27,7 +32,7 @@ export const OneOrder = () => {
         }
     }
 
-    const total = orders && ingredientsData && data.ingredients.reduce((a, b) => {
+    const total = ingredient && ingredient[0].ingredients.reduce((a, b) => {
         ingredientsData && ingredientsData.forEach(item => {
             if (item._id=== b) {
                 a += item.price
@@ -53,16 +58,16 @@ export const OneOrder = () => {
 
     return (
         <section className={style.oneOrder}>
-            <p className={ `${ style.order } text text_type_digits-default` }>{`#${orders && data.number}`}</p>
-            <p className={`${style.boon} text text_type_main-medium`}>{orders && data.name}</p>
-            <p className={`${style.good} text text_type_main-small text_color_inactive`}>{orders && checkStatus(data.status)}</p>
+            <p className={ `${ style.order } text text_type_digits-default` }>{`#${ingredient && ingredient[0].number}`}</p>
+            <p className={`${style.boon} text text_type_main-medium`}>{ingredient && ingredient[0].name}</p>
+            <p className={`${style.good} text text_type_main-small text_color_inactive`}>{ingredient && checkStatus(ingredient.status)}</p>
             <p className={`${style.brom} text text_type_main-medium`}>Состав:</p>
             <div className={`${style.wrapper} custom-scroll`}>
-                {orders && ingredientsData && data && checkTotalIngredient(ingredientsData, data).map((item, i) => <IngredientSmall key={i} item={item}/>)}
+                {ingredientsData && ingredient && checkTotalIngredient(ingredientsData, ingredient[0]).map((item, i) => <IngredientSmall key={i} item={item}/>)}
             </div>
             <div className={style.wrapperPrice}>
                 <p className="text text_type_main-default text_color_inactive">
-                    <FormattedDate date={new Date(orders && data.updatedAt)} />
+                    <FormattedDate date={new Date(ingredient && ingredient[0].updatedAt)} />
                 </p>
                 <div className={style.price}>
                     <p className="text text_type_digits-default">{total}</p>
