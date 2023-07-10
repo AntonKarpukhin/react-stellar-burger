@@ -1,0 +1,67 @@
+.oneOrder {
+	padding: 20px;
+	display: flex;
+	flex-direction: column;
+}
+
+.brom {
+	padding-top: 63px;
+}
+
+.wrapper {
+	margin-top: 20px;
+	overflow: scroll;
+	height: 312px;
+	overflow-x: hidden;
+	scroll-behavior: smooth;
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
+.wrapperPrice {
+	padding-top: 40px;
+	display: flex;
+	justify-content: space-between;
+}
+
+.price {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.good {
+	padding-top: 12px;
+}
+
+.boon {
+	padding-top: 40px;
+}
+
+.order {
+	align-self: center;
+}
+
+.wrapper1 {
+	display: grid;
+	align-items: center;
+	grid-template-columns: 50px 320px auto;
+	gap: 26px;
+}
+
+.img {
+	display: block;
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	border: blueviolet 1px solid;
+	padding: 5px;
+}
+
+.wrapperPrice1 {
+	display: flex;
+	justify-self: end;
+	gap: 8px;
+	margin-right: 24px;
+}

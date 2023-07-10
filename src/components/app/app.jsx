@@ -4,7 +4,7 @@ import AppHeader from "../app-header/app-header";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import {
-    Entrance, ForgotPassword, Registration, ResetPassword, Profile, NotFound404, IngredientPage, Home
+    Entrance, ForgotPassword, Registration, ResetPassword, Profile, NotFound404, IngredientPage, Home, OrderFeed, Order
 } from "../../pages";
 
 import { useEffect} from "react";
@@ -15,14 +15,22 @@ import { checkUserAuth } from "../../services/actions/userAction";
 import { OnlyAuth, OnlyUnAuth } from "../protected-route/protected-route";
 import {
     route404,
-    routeForgotPassword, routeIngredientId,
+    routeForgotPassword,
+    routeIngredientId,
     routeIngredients,
     routeLogin,
     routeMain,
-    routeProfile,
+    routeUser,
     routeRegister,
-    routeResetPassword
+    routeResetPassword,
+    routeProfile,
+    routeOrderFeed,
+    routeProfileFeed, routeOrderFeedId,
 } from "../../utils/data";
+import { ProfileInfo } from "../profile-info/profile-info";
+import { ProfileFeed } from "../profile-feed/profile-feed";
+import { OneOrder } from "../one-order/one-order";
+import { getFeed } from "../../services/actions/ingredientsAction";
 
 function App() {
 
@@ -30,25 +38,32 @@ function App() {
 
     useEffect(() => {
         dispatch(checkUserAuth());
+        dispatch(getFeed())
     }, []);
-
 
     const location = useLocation();
     const navigate = useNavigate();
+
     const background = location.state && location.state.background;
 
     const handleModalClose = () => {
         navigate(-1);
     };
 
-  return (
+    return (
     <div className={style.app}>
         <DndProvider backend={HTML5Backend}>
             <AppHeader/>
             <Routes location={background || location}>
+                <Route path={routeOrderFeed} element={<OrderFeed/>}/>
+                <Route path={`${routeOrderFeed}${routeOrderFeedId}`} element={<Order/>}/>
                 <Route path={routeLogin} element={<OnlyUnAuth component={<Entrance/>}/>}/>
                 <Route path={routeRegister} element={<OnlyUnAuth component={<Registration/>}/>}/>
-                <Route path={routeProfile} element={<OnlyAuth component={<Profile/>}/>}/>
+                <Route path={routeUser} element={<OnlyAuth component={<Profile/>}/>}>
+                    <Route index element={<ProfileInfo />} />
+                    <Route path={routeProfile} element={<OnlyAuth component={<ProfileInfo/>}/>}/>
+                    <Route path={routeProfileFeed} element={<OnlyAuth component={<ProfileFeed/>}/>}/>
+                </Route>
                 <Route path={routeForgotPassword} element={<OnlyUnAuth component={<ForgotPassword/>}/>}/>
                 <Route path={routeResetPassword} element={<ResetPassword/>}/>
                 <Route path={routeMain} element={<Home/>}/>
@@ -62,6 +77,22 @@ function App() {
                         element={
                             <Modal closeModal={handleModalClose}>
                                 <IngredientDetails />
+                            </Modal>
+                        }
+                    />
+                    <Route
+                        path={`${routeOrderFeed}${routeOrderFeedId}`}
+                        element={
+                            <Modal closeModal={handleModalClose}>
+                                <OneOrder />
+                            </Modal>
+                        }
+                    />
+                    <Route
+                        path={`${routeUser}/${routeProfileFeed}${routeOrderFeedId}`}
+                        element={
+                            <Modal closeModal={handleModalClose}>
+                                <OneOrder />
                             </Modal>
                         }
                     />

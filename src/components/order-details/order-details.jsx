@@ -8,7 +8,7 @@ const OrderDetails = () => {
     const { orderID, feedRequest, feedFailed } = useSelector(state => state.order)
 
     if (feedRequest && !orderID) {
-        return  <h4>Загрузка компонентов</h4>
+        return  <h4 className={style.waiting}>Идет приготовление...</h4>
     } else if (feedFailed) {
         return <h5>Ошибка загрузки</h5>
     }

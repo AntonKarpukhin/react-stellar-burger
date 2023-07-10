@@ -1,0 +1,50 @@
+.orderWrapper {
+	padding: 20px;
+	display: flex;
+	flex-direction: column;
+	width: 700px;
+	margin: 0 auto;
+	margin-top: 125px;
+}
+
+.brom {
+	padding-top: 63px;
+}
+
+.wrapper {
+	margin-top: 20px;
+	height: 312px;
+	scroll-behavior: smooth;
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
+.wrapperScroll {
+	overflow: scroll;
+	overflow-x: hidden;
+}
+
+.wrapperPrice {
+	padding-top: 40px;
+	display: flex;
+	justify-content: space-between;
+}
+
+.price {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.good {
+	padding-top: 12px;
+}
+
+.boon {
+	padding-top: 40px;
+}
+
+.order {
+	align-self: center;
+}
