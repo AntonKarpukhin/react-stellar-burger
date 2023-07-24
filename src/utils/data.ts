@@ -16,16 +16,16 @@ export const WebsocketStatus: IWebsocketStatus  = {
     OFFLINE: 'OFFLINE'
 }
 
-export const routeMain: "/" = "/";
-export const routeLogin: "/login" = "/login";
-export const routeOrderFeed: "/feed" = "/feed";
-export const routeOrderFeedId: "/:orderId" = "/:orderId";
-export const routeProfileFeed: "orders" = "orders";
-export const routeRegister: "/register" = "/register";
-export const routeUser: "/user" = "/user";
-export const routeProfile: "profile" = "profile";
-export const routeForgotPassword: "/forgot-password" = "/forgot-password";
-export const routeResetPassword: "/reset-password" = "/reset-password";
-export const routeIngredients: "/ingredients" = "/ingredients";
-export const routeIngredientId: "/:ingredientId" = "/:ingredientId";
-export const route404: "*" = "*";
+export const routeMain= "/";
+export const routeLogin = "/login";
+export const routeOrderFeed = "/feed";
+export const routeOrderFeedId = "/:orderId";
+export const routeProfileFeed = "orders";
+export const routeRegister = "/register";
+export const routeUser = "/user";
+export const routeProfile = "profile";
+export const routeForgotPassword = "/forgot-password";
+export const routeResetPassword = "/reset-password";
+export const routeIngredients = "/ingredients";
+export const routeIngredientId = "/:ingredientId";
+export const route404 = "*";

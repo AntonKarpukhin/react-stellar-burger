@@ -1,6 +1,6 @@
 import style from './modal.module.css'
 import ReactDOM from "react-dom";
-import { FC, ReactElement, useEffect } from "react";
+import { FC, PropsWithChildren, ReactElement, useEffect } from "react";
 import ModalOverlay from "../modal-overlay/modal-overlay";
 import { CloseIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 
@@ -8,10 +8,10 @@ const modalRoot = document.getElementById("react-modals") as HTMLElement;
 
 interface IModal {
     closeModal: () => void;
-    children?: ReactElement
+    children?: PropsWithChildren<ReactElement>
 }
 
-const Modal: FC<IModal> = (props) => {
+const Modal: FC<IModal> = ( props) => {
 
     const { closeModal } = props;
 

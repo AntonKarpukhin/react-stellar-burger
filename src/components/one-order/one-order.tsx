@@ -11,7 +11,6 @@ import { IIngredientInterface } from "../../services/types/ingredient-types";
 export const OneOrder: FC = () => {
 
     const ingredientsData = useSelector(state => state.ingredients.ingredients)
-    // @ts-ignore
     const ingredient = useSelector(state => state.ingredient.ingredientData)
 
     const {orderId} = useParams();

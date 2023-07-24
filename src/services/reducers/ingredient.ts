@@ -17,10 +17,9 @@ const initialState: IIngredientState = {
     }
 }
 
-const ingredientReducer = (state: IIngredientState = initialState, action: TIngredientAction) => {
+const ingredientReducer = (state: IIngredientState = initialState, action: TIngredientAction): IIngredientState => {
     switch ( action.type ) {
         case "OPEN_INGREDIENT":
-            // console.log(action.payload[0])
             return {
                 ...state,
                 ingredientData: action.payload[0]
@@ -28,7 +27,14 @@ const ingredientReducer = (state: IIngredientState = initialState, action: TIngr
         case "CLOSE_INGREDIENT":
             return {
                 ...state,
-                ingredientData: {}
+                ingredientData: {
+                    _id: '',
+                    ingredients: ['', ''],
+                    status: '',
+                    name: '',
+                    createdAt: '',
+                    updatedAt: '',
+                    number: 0}
             }
         default: {
             return state

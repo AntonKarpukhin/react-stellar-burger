@@ -32,11 +32,9 @@ const Ingredient: FC<IIngredient> = (props) => {
     });
 
     useEffect(() => {
-        // @ts-ignore
         if (bun &&  (bun._id === newItem._id)) {
             setCounter(1)
         } else {
-            // @ts-ignore
             setCounter(ingredients.filter(ingredient => ingredient._id === newItem._id).length);
         }
     },[ingredients, bun, newItem._id]);

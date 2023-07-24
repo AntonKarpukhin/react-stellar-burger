@@ -3,7 +3,7 @@ import { ADD_INGREDIENT, DELETE_INGREDIENT, MOVE_INGREDIENT } from "../types/con
 import { IIngredientInterface } from "../types/ingredient-types";
 
 interface IConstructorBurgerState {
-    ingredients: [];
+    ingredients: IIngredientInterface[];
     bun: null | IIngredientInterface;
 }
 
@@ -12,7 +12,7 @@ const initialState: IConstructorBurgerState = {
     bun: null,
 }
 
-const constructorBurger = (state: IConstructorBurgerState = initialState, action: TConstructorBurgerAction) => {
+const constructorBurger = (state: IConstructorBurgerState = initialState, action: TConstructorBurgerAction): IConstructorBurgerState => {
     switch ( action.type ) {
         case ADD_INGREDIENT:
             if ( action.payload.type === 'bun' ) {

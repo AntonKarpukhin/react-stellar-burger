@@ -18,9 +18,8 @@ import { IIngredientInterface } from "../../services/types/ingredient-types";
 
 const BurgerConstructor: FC = () => {
 
-    // @ts-ignore
     const bun = useSelector(state => state.constructorBurger.bun)
-    // @ts-ignore
+
     const ingredients = useSelector(state => state.constructorBurger.ingredients)
     const { ingredientsID } = useSelector(state => state.order)
     const user = useSelector(state => state.userReducer);

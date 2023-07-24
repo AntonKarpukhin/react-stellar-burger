@@ -5,6 +5,7 @@ import {
     WS_ORDER_FEED_DISCONNECT, WS_ORDER_FEED_ERROR, WS_ORDER_FEED_MESSAGE,
     WS_ORDER_FEED_OPEN
 } from "../types/constant";
+import { IOrders } from "../types/order";
 
 export interface IConnect {
     readonly type: typeof WS_ORDER_FEED_CONNECT;
@@ -30,7 +31,7 @@ export interface IError {
 
 export interface IMessage {
     readonly type: typeof WS_ORDER_FEED_MESSAGE;
-    readonly payload: [];
+    readonly payload: IOrders[];
 }
 
 export interface IClose {
@@ -61,7 +62,7 @@ export const error = (error: string): IError => ({
     payload: error
 });
 
-export const message = (arr: []): IMessage => ({
+export const message = (arr: IOrders[]): IMessage => ({
     type: WS_ORDER_FEED_MESSAGE,
     payload: arr
 });

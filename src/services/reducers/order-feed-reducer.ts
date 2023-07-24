@@ -6,22 +6,22 @@ import {  IOrders } from "../types/order";
 
 interface IOrderFeedReducerState {
     status: string,
-    orders: IOrders,
+    orders: IOrders[],
     connectingError: string
 }
 
 const initialState: IOrderFeedReducerState = {
     status: WebsocketStatus.OFFLINE,
-    orders: {
+    orders: [{
         success: true,
         orders: [],
         total: '',
         totalToday: '',
-    },
+    }],
     connectingError: ''
 };
 
-const orderFeedReducer = (state: IOrderFeedReducerState = initialState, action: TOrderFeedAction) => {
+const orderFeedReducer = (state: IOrderFeedReducerState = initialState, action: TOrderFeedAction): IOrderFeedReducerState => {
     switch (action.type)
     {
         case WS_ORDER_FEED_CONNECTING:
